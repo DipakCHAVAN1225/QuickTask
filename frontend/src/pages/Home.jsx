@@ -152,12 +152,11 @@ export default function Home() {
               </div>
             </div>
             <div style={{ marginTop: 14 }}>
-              <button className="hc-btn" style={{ width: "100%" }}>Book Now</button>
+              <button className="hc-btn bg-blue-700" style={{ width: "100%" }}>Book Now</button>
             </div>
           </div>
         </div>
       </header>
-
       <main>
         <section className="hc-section">
           <h2 style={{ marginTop: 0 }}>Popular services</h2>
