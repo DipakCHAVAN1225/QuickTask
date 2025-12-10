@@ -29,7 +29,7 @@ return (
 
 <div className="hidden md:block">
 <div className="relative rounded-2xl overflow-hidden shadow-lg">
-<img src="https://source.unsplash.com/800x600/?service,technician" alt="hero" className="w-full h-96 object-cover" />
+<img src="/Static/Ac_Installation_1.jpg" alt="hero" className="w-full h-96 object-cover" />
 <div className="absolute bottom-6 left-6 bg-white/80 backdrop-blur p-4 rounded-lg">
 <div className="text-sm font-medium">Popular</div>
 <div className="text-lg font-semibold">AC Installation - ₹1,299</div>
