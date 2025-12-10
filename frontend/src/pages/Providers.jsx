@@ -22,7 +22,7 @@ export default function Providers() {
           return;
         }
 
-        const data = await apiFetch("/api/providers/me");
+        const data = await apiFetch("/providers/me");
         setProviderData(data.provider);
       } catch (err) {
         console.error(err);

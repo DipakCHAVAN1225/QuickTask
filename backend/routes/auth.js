@@ -1,263 +1,195 @@
-// const express = require("express");
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
+
+
+// // backend/routes/auth.js
+// const express = require('express');
 // const router = express.Router();
-// const User = require("../models/User");
+// const bcrypt = require('bcryptjs');
+// const jwt = require('jsonwebtoken');
+
+// const User = require('../models/User');
+
+// // create token helper
+// function createToken(user) {
+//   return jwt.sign(
+//     { id: user._id.toString(), email: user.email, role: user.role },
+//     process.env.JWT_SECRET,
+//     { expiresIn: '7d' }
+//   );
+// }
 
 // // POST /api/auth/register
-// router.post("/register", async (req, res) => {
+// router.post('/Signup', async (req, res) => {
 //   try {
-//     const { role, name, email, password, businessName, serviceType } = req.body;
-//     if (!email || !password) return res.status(400).json({ message: "Email & password required" });
+//     const { name, email, password, role } = req.body;
+//     if (!name || !email || !password) {
+//       return res.status(400).json({ message: 'Name, email and password are required.' });
+//     }
 
-//     const existing = await User.findOne({ email });
-//     if (existing) return res.status(400).json({ message: "Email already registered" });
+//     const existing = await User.findOne({ email: email.toLowerCase() });
+//     if (existing) return res.status(409).json({ message: 'Email already registered.' });
 
 //     const salt = await bcrypt.genSalt(10);
-//     const passwordHash = await bcrypt.hash(password, salt);
+//     const hashed = await bcrypt.hash(password, salt);
 
 //     const user = new User({
-//       name,
-//       email,
-//       passwordHash,
-//       role: role === "provider" ? "provider" : "user",
-//       businessName: businessName || undefined,
-//       serviceType: serviceType || undefined
+//       name: name.trim(),
+//       email: email.toLowerCase().trim(),
+//       password: hashed,
+//       role: role || 'user'
 //     });
 
 //     await user.save();
+//     const token = createToken(user);
 
-//     // sign token
-//     const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "7d" });
-
-//     return res.status(201).json({ token, user: {
-//       id: user._id,
-//       name: user.name,
-//       email: user.email,
-//       role: user.role,
-//       businessName: user.businessName,
-//       serviceType: user.serviceType
-//     }});
+//     res.status(201).json({
+//       message: 'User registered.',
+//       token,
+//       user: { id: user._id, name: user.name, email: user.email, role: user.role }
+//     });
 //   } catch (err) {
-//     console.error(err);
-//     return res.status(500).json({ message: "Server error" });
+//     console.error('Signup error:', err);
+//     res.status(500).json({ message: 'Server error' });
 //   }
 // });
 
 // // POST /api/auth/login
-// router.post("/login", async (req, res) => {
+// router.post('/login', async (req, res) => {
 //   try {
-//     const { role, email, password, businessName } = req.body;
-//     if (!email || !password) return res.status(400).json({ message: "Email & password required" });
+//     const { email, password } = req.body;
+//     if (!email || !password) return res.status(400).json({ message: 'Email and password are required.' });
 
-//     const user = await User.findOne({ email });
-//     if (!user) return res.status(400).json({ message: "Invalid credentials" });
+//     const user = await User.findOne({ email: email.toLowerCase() });
+//     if (!user) return res.status(401).json({ message: 'Invalid credentials.' });
 
-//     // If login is supposed to be provider only for provider tab, optional check:
-//     if (role === "provider" && user.role !== "provider") {
-//       return res.status(403).json({ message: "Not a provider account" });
-//     }
+//     const matched = await bcrypt.compare(password, user.password);
+//     if (!matched) return res.status(401).json({ message: 'Invalid credentials.' });
 
-//     const valid = await bcrypt.compare(password, user.passwordHash);
-//     if (!valid) return res.status(400).json({ message: "Invalid credentials" });
-
-//     const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "7d" });
-
-//     return res.json({ token, user: {
-//       id: user._id,
-//       name: user.name,
-//       email: user.email,
-//       role: user.role,
-//       businessName: user.businessName,
-//       serviceType: user.serviceType
-//     }});
+//     const token = createToken(user);
+//     res.json({
+//       message: 'Login successful.',
+//       token,
+//       user: { id: user._id, name: user.name, email: user.email, role: user.role }
+//     });
 //   } catch (err) {
-//     console.error(err);
-//     return res.status(500).json({ message: "Server error" });
+//     console.error('Login error:', err);
+//     res.status(500).json({ message: 'Server error' });
 //   }
 // });
 
-// module.exports = router;
-
-// // backend/routes/auth.js
-// const express = require("express");
-// const { body, validationResult } = require("express-validator");
-// const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
-// const crypto = require("crypto");
-// const User = require("../models/User");
-// const sendVerificationEmail = require("../utils/mailer"); // optional helper you'll create
-// const router = express.Router();
-
-// // POST /api/auth/register
-// router.post(
-//   "/register",
-//   [
-//     // common checks
-//     body("email").isEmail().withMessage("Valid email required"),
-//     body("password").isLength({ min: 6 }).withMessage("Password minimum 6 chars"),
-//     // if role is user then require name, if provider require businessName & serviceType
-//     body("role").optional().isIn(["user", "provider"]),
-//     body("name").if(body("role").not().equals("provider")).notEmpty().withMessage("Name required"),
-//     body("businessName").if(body("role").equals("provider")).notEmpty().withMessage("Business name required"),
-//     body("serviceType").if(body("role").equals("provider")).notEmpty().withMessage("Service type required")
-//   ],
-//   async (req, res) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) return res.status(400).json({ message: "Validation failed", errors: errors.array() });
-
-//     const { role = "user", name, email, password, businessName, serviceType } = req.body;
-
-//     try {
-//       // normalize email
-//       const normalizedEmail = (email || "").toLowerCase().trim();
-
-//       // check duplicate
-//       const existing = await User.findOne({ email: normalizedEmail });
-//       if (existing) return res.status(400).json({ message: "Email already registered" });
-
-//       // hash password
-//       const salt = await bcrypt.genSalt(10);
-//       const passwordHash = await bcrypt.hash(password, salt);
-
-//       // create user object
-//       const userData = {
-//         email: normalizedEmail,
-//         passwordHash,
-//         role: role === "provider" ? "provider" : "user"
-//       };
-
-//       if (role === "provider") {
-//         userData.businessName = businessName;
-//         userData.serviceType = serviceType;
-//         userData.providerVerified = false;
-//         // set status to pending so admin can approve
-//         userData.status = "pending";
-//       } else {
-//         userData.name = name;
-//         userData.status = "active";
-//       }
-
-//       // optional: email verification setup
-//       const verificationToken = crypto.randomBytes(24).toString("hex");
-//       userData.emailVerificationToken = verificationToken;
-//       userData.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
-//       userData.emailVerified = false;
-
-//       const user = new User(userData);
-//       await user.save();
-
-//       // send verification email (non-blocking)
-//       // implement sendVerificationEmail(email, token) using nodemailer
-//       if (process.env.SEND_VERIFICATION_EMAIL === "true") {
-//         sendVerificationEmail(user.email, verificationToken).catch(err => {
-//           console.error("Failed to send verification email:", err);
-//         });
-//       }
-
-//       // issue JWT (you can decide not to auto-login provider until approved)
-//       // If provider -> you may not want to sign token until approved. Here we sign but client can check status.
-//       const tokenPayload = { id: user._id.toString(), role: user.role, email: user.email };
-//       const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "7d" });
-
-//       // return public user object
-//       const publicUser = {
-//         id: user._id,
-//         email: user.email,
-//         role: user.role,
-//         name: user.name,
-//         businessName: user.businessName,
-//         serviceType: user.serviceType,
-//         status: user.status,
-//         emailVerified: user.emailVerified
-//       };
-
-//       return res.status(201).json({ token, user: publicUser });
-//     } catch (err) {
-//       console.error("Register error:", err);
-//       return res.status(500).json({ message: "Server error" });
-//     }
-//   }
-// );
+// // optional quick test route: GET /api/auth/test
+// router.get('/test', (req, res) => res.send('Auth route mounted'));
 
 // module.exports = router;
 
 
-// backend/routes/auth.js  (replace existing /register handler)
-const express = require("express");
-const { body, validationResult } = require("express-validator");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const User = require("../models/User");
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const auth = require('../middleware/Auth');
+
 const router = express.Router();
 
-router.post(
-  "/register",
-  [
-    body("email").isEmail().withMessage("Valid email required"),
-    body("password").isLength({ min: 6 }).withMessage("Password minimum 6 chars"),
-    body("role").optional().isIn(["user", "provider"]),
-    // require name for users, businessName & serviceType for providers
-    body("name").if(body("role").not().equals("provider")).notEmpty().withMessage("Name required"),
-    body("businessName").if(body("role").equals("provider")).notEmpty().withMessage("Business name required"),
-    body("serviceType").if(body("role").equals("provider")).notEmpty().withMessage("Service type required")
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ message: "Validation failed", errors: errors.array() });
+/**
+ * @route   POST /api/auth/register
+ * @desc    Register user/provider
+ * @body    { name, email, password, role }  role: 'user' or 'provider'
+ */
+router.post('/register', async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
 
-    const { role = "user", name, email, password, businessName, serviceType } = req.body;
-
-    try {
-      const normalizedEmail = (email || "").toLowerCase().trim();
-      const existing = await User.findOne({ email: normalizedEmail });
-      if (existing) return res.status(400).json({ message: "Email already registered" });
-
-      const salt = await bcrypt.genSalt(10);
-      const passwordHash = await bcrypt.hash(password, salt);
-
-      const userData = {
-        email: normalizedEmail,
-        passwordHash,
-        role: role === "provider" ? "provider" : "user",
-        status: "active",             // immediate activation
-        providerVerified: role === "provider" ? true : false // set true if you want providers auto-verified
-      };
-
-      if (role === "provider") {
-        userData.businessName = businessName;
-        userData.serviceType = serviceType;
-      } else {
-        userData.name = name;
-      }
-
-      // (optional) skip email verification flow or still create a token for verification link
-      const user = new User(userData);
-      await user.save();
-
-      const tokenPayload = { id: user._id.toString(), role: user.role, email: user.email };
-      const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "7d" });
-
-      const publicUser = {
-        id: user._id,
-        email: user.email,
-        role: user.role,
-        name: user.name,
-        businessName: user.businessName,
-        serviceType: user.serviceType,
-        status: user.status
-      };
-
-      return res.status(201).json({ token, user: publicUser });
-    } catch (err) {
-      console.error("Register error:", err);
-      return res.status(500).json({ message: "Server error" });
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ message: 'Please provide name, email, password and role' });
     }
+
+    if (!['user', 'provider'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role' });
+    }
+
+    let existing = await User.findOne({ email });
+    if (existing) {
+      return res.status(409).json({ message: 'User with that email already exists' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(password, salt);
+
+    const user = new User({
+      name,
+      email,
+      password: hashed,
+      role
+    });
+
+    await user.save();
+
+    const payload = { id: user._id, role: user.role };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
+
+    res.status(201).json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
-);
+});
+
+/**
+ * @route   POST /api/auth/login
+ * @desc    Login and return token
+ * @body    { email, password }
+ */
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ message: 'Please provide email and password' });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const payload = { id: user._id, role: user.role };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' });
+
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+/**
+ * @route   GET /api/auth/me
+ * @desc    Get logged-in user info (protected)
+ */
+router.get('/me', auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json({ user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 module.exports = router;
-
-
-

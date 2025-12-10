@@ -292,7 +292,7 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const data = await apiFetch("/api/auth/login", {
+      const data = await apiFetch("/auth/login", {
         method: "POST",
         body: JSON.stringify({
           role: "user",
@@ -324,7 +324,7 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const data = await apiFetch("/api/auth/login", {
+      const data = await apiFetch("/auth/login", {
         method: "POST",
         body: JSON.stringify({
           role: "provider",
