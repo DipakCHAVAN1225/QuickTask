@@ -5,6 +5,8 @@ import ServicesGrid from './components/ServicesGrid'
 import HowItWorks from './components/HowItWorks'
 import Testimonials from './components/Testimonials'
 import Footer from './components/Footer'
+import ImageSlider from './components/ImageSlider'
+
  
 
 
@@ -15,6 +17,8 @@ return (
 <Navbar />
 <main>
 <Hero />
+<ImageSlider />
+<ImageSlider />
 <Categories />
 <ServicesGrid />
 <HowItWorks />

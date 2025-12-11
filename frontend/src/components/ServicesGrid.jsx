@@ -1,4 +1,35 @@
-// src/components/ServicesGrid.jsx
+const categories = [
+  {
+    id: 1,
+    title: "Women's Salon & Spa",
+    img: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1678864013225-bfc1de.jpeg"
+  },
+  {
+    id: 2,
+    title: "Men's Salon & Massage",
+    img: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1750845033589-98cdfb.jpeg"
+  },
+  {
+    id: 3,
+    title: "Cleaning & Pest Control",
+    img: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1681711961404-75dfec.jpeg"
+  },
+  {
+    id: 4,
+    title: "Electrician, Plumber & Carpenter",
+    img: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1658402794135-faf080.png"
+  },
+  {
+    id: 5,
+    title: "AC & Appliance Repair",
+    img: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1751547558710-5ff49a.jpeg"
+  },
+  {
+    id: 6,
+    title: "Native Water Purifier",
+    img: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1763734339268-efa6ea.jpeg"
+  }
+];
 
 const services = [
   { id: 1, title: 'AC Service & Repair', price: 'From ₹499', time: '1 - 2 hrs', img: '/Static/AC_Reparing.jpg' },
@@ -7,90 +38,75 @@ const services = [
   { id: 4, title: 'Electrician',          price: 'From ₹199', time: '30 - 90 mins', img: '/Static/Electrician.jpg' },
 ];
 
-function ServicesGrid() {
+export default function HomeServices() {
   return (
-    <section id="services" className="max-w-7xl mx-auto px-6 py-8">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-bold">Top services</h3>
-        <div className="text-sm text-gray-600">Showing top results near you</div>
-      </div>
+    <div className="w-full">
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {services.map((s) => (
-          <div
-            key={s.id}
-            className="bg-white rounded-2xl overflow-hidden shadow-sm border hover:shadow-md transition"
-          >
-            <img src={s.img} alt={s.title} className="w-full h-44 object-cover" />
-            <div className="p-4">
-              <div className="flex items-center justify-between">
-                <h4 className="font-semibold">{s.title}</h4>
-                <div className="text-sm text-gray-500">{s.time}</div>
+      {/* ------------------ CATEGORIES SECTION ------------------ */}
+      <section className="max-w-7xl mx-auto px-6 py-10">
+        <h1 className="text-3xl font-bold mb-6">
+          Home services at your doorstep
+        </h1>
+
+        <div className="bg-white shadow-lg rounded-2xl p-6 border">
+          <p className="text-lg font-semibold text-gray-600 mb-5">
+            What are you looking for?
+          </p>
+
+          <div className="grid grid-cols-3 sm:grid-cols-3 gap-6">
+            {categories.map((c) => (
+              <div
+                key={c.id}
+                className="flex flex-col items-center p-3 rounded-xl hover:bg-gray-100 hover:shadow-md transition cursor-pointer"
+              >
+                <img
+                  src={c.img}
+                  alt={c.title}
+                  className="w-16 h-16 object-contain rounded-xl mb-2"
+                />
+                <p className="text-xs text-center">{c.title}</p>
               </div>
-              <div className="mt-2 text-indigo-600 font-semibold">{s.price}</div>
-              <div className="mt-4 flex items-center gap-3">
-                <button className="flex-1 py-2 rounded-md bg-black text-white">
-                  View details
-                </button>
-                <button className="py-2 px-4 rounded-md bg-black text-white">
-                  Book
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+        </div>
+      </section>
 
-export default ServicesGrid;  // default export
+      {/* ------------------ TOP SERVICES GRID ------------------ */}
+      <section id="services" className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-2xl font-bold">Top services</h3>
+          <div className="text-sm text-gray-600">Showing top results near you</div>
+        </div>
 
-// -----------------------------
-// CATEGORIES COMPONENT
-// -----------------------------
-
-export function Categories() {
-  const items = [
-    { title: "Women's Salon & Spa",            img: "/icons/women-salon.png" },
-    { title: "Men's Salon & Massage",         img: "/icons/men-salon.png" },
-    { title: "Cleaning & Pest Control",       img: "/icons/cleaning.png" },
-    { title: "Electrician, Plumber & Carpenter", img: "/icons/electrician.png" },
-    { title: "AC & Appliance Repair",         img: "/icons/ac-repair.png" },
-    { title: "Native Water Purifier",         img: "/icons/water.png",  tag: "Sale" },
-    { title: "Painting & Waterproofing",      img: "/icons/painting.png" },
-    { title: "Native Smart Locks",           img: "/icons/locks.png",   tag: "Sale" },
-  ];
-
-  return (
-    <div className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold leading-tight mb-8">
-        Home services at your <br /> doorstep
-      </h1>
-
-      <div className="bg-white shadow rounded-2xl p-8 border">
-        <h2 className="text-xl font-semibold mb-6">What are you looking for?</h2>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-6">
-          {items.map((item) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {services.map((s) => (
             <div
-              key={item.title}
-              className="relative flex flex-col items-center bg-gray-100 rounded-xl p-4 hover:shadow cursor-pointer transition"
+              key={s.id}
+              className="bg-white rounded-2xl overflow-hidden shadow-sm border hover:shadow-md transition"
             >
-              {item.tag && (
-                <span className="text-xs bg-green-600 text-white px-2 py-1 rounded-md absolute top-2 right-2">
-                  {item.tag}
-                </span>
-              )}
+              <img src={s.img} alt={s.title} className="w-full h-44 object-cover" />
+              <div className="p-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-semibold">{s.title}</h4>
+                  <div className="text-sm text-gray-500">{s.time}</div>
+                </div>
 
-              <img src={item.img} alt={item.title} className="w-16 h-16 mb-3" />
-              <p className="text-center text-gray-800 text-sm font-medium">
-                {item.title}
-              </p>
+                <div className="mt-2 text-indigo-600 font-semibold">{s.price}</div>
+
+                <div className="mt-4 flex items-center gap-3">
+                  <button className="flex-1 py-2 rounded-md bg-black text-white">
+                    View details
+                  </button>
+                  <button className="py-2 px-4 rounded-md bg-black text-white">
+                    Book
+                  </button>
+                </div>
+              </div>
             </div>
           ))}
         </div>
-      </div>
+      </section>
+
     </div>
   );
 }
