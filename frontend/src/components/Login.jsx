@@ -41,7 +41,7 @@ export default function Login() {
           <input type="password" name="password" value={form.password} onChange={handleChange} required />
         </label>
 
-        <button type="submit">Login</button>
+        <button type="submit" >Login</button>
       </form>
 
       <p>
