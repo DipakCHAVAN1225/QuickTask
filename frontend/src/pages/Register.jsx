@@ -1,247 +1,3 @@
-// import React, { useState } from 'react';
-// import API from '../api/api';
-// import { useNavigate } from 'react-router-dom';
-// import { setAuthToken } from '../api/api';
-
-// export default function Register({ setUser }) {
-//   const [name, setName] = useState('');
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const nav = useNavigate();
-
-//   const submit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const res = await API.post('/auth/register', { name, email, password });
-//       localStorage.setItem('token', res.data.token);
-//       localStorage.setItem('user', JSON.stringify(res.data.user));
-//       setAuthToken(res.data.token);
-//       setUser(res.data.user);
-//       nav('/items');
-//     } catch (err) {
-//       alert(err.response?.data?.msg || 'Register failed');
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={submit}>
-//       <h2>Register</h2>
-//       <input placeholder="Name" value={name} onChange={e=>setName(e.target.value)} />
-//       <input placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} />
-//       <input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} />
-//       <button type="submit">Register</button>
-//     </form>
-//   );
-// }
-
-
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-
-// export default function Register() {
-//   const [tab, setTab] = useState("user"); // user | provider
-
-//   // user fields
-//   const [userName, setUserName] = useState("");
-//   const [userEmail, setUserEmail] = useState("");
-//   const [userPassword, setUserPassword] = useState("");
-
-//   // provider fields
-//   const [provBusiness, setProvBusiness] = useState("");
-//   const [provEmail, setProvEmail] = useState("");
-//   const [provPassword, setProvPassword] = useState("");
-//   const [provServiceType, setProvServiceType] = useState("");
-
-//   const [loading, setLoading] = useState(false);
-//   const [errors, setErrors] = useState({});
-//   const [apiError, setApiError] = useState("");
-//   const navigate = useNavigate();
-
-//   const validateEmail = (e) => /^\S+@\S+\.\S+$/.test(e);
-
-//   async function handleUserRegister(e) {
-//     e.preventDefault();
-//     setApiError("");
-//     const err = {};
-//     if (!userName.trim()) err.userName = "Name required";
-//     if (!userEmail.trim()) err.userEmail = "Email required";
-//     else if (!validateEmail(userEmail)) err.userEmail = "Invalid email";
-//     if (!userPassword || userPassword.length < 6) err.userPassword = "Password min 6 chars";
-//     setErrors(err);
-//     if (Object.keys(err).length) return;
-
-//     setLoading(true);
-//     try {
-//       const res = await fetch("/api/auth/register", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({
-//           role: "user",
-//           name: userName,
-//           email: userEmail,
-//           password: userPassword,
-//         }),
-//       });
-//       const data = await res.json();
-//       if (!res.ok) throw new Error(data.message || "Register failed");
-
-//       // optionally auto-login by storing token
-//       localStorage.setItem("token", data.token);
-//       navigate("/");
-//     } catch (err) {
-//       setApiError(err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   }
-
-//   async function handleProviderRegister(e) {
-//     e.preventDefault();
-//     setApiError("");
-//     const err = {};
-//     if (!provBusiness.trim()) err.provBusiness = "Business name required";
-//     if (!provEmail.trim()) err.provEmail = "Email required";
-//     else if (!validateEmail(provEmail)) err.provEmail = "Invalid email";
-//     if (!provPassword || provPassword.length < 6) err.provPassword = "Password min 6 chars";
-//     if (!provServiceType) err.provServiceType = "Choose a service";
-//     setErrors(err);
-//     if (Object.keys(err).length) return;
-
-//     setLoading(true);
-//     try {
-//       const res = await fetch("/api/auth/register", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({
-//           role: "provider",
-//           businessName: provBusiness,
-//           email: provEmail,
-//           password: provPassword,
-//           serviceType: provServiceType,
-//         }),
-//       });
-//       const data = await res.json();
-//       if (!res.ok) throw new Error(data.message || "Register failed");
-
-//       localStorage.setItem("token", data.token);
-//       navigate("/providers");
-//     } catch (err) {
-//       setApiError(err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   }
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-//       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-md overflow-hidden">
-//         <div className="px-6 py-4 border-b">
-//           <h2 className="text-2xl font-semibold text-gray-800">Create account</h2>
-//           <p className="text-sm text-gray-500 mt-1">Register as a User or Service Provider.</p>
-//         </div>
-
-//         <div className="flex items-center gap-2 px-4 py-3 bg-gray-50">
-//           <button
-//             onClick={() => { setTab("user"); setErrors({}); setApiError(""); }}
-//             className={`px-4 py-2 rounded-lg text-sm font-medium transition ${tab === "user" ? "bg-blue-600 text-white shadow" : "text-gray-600 hover:bg-gray-100"}`}
-//             aria-pressed={tab === "user"}
-//           >
-//             User
-//           </button>
-//           <button
-//             onClick={() => { setTab("provider"); setErrors({}); setApiError(""); }}
-//             className={`px-4 py-2 rounded-lg text-sm font-medium transition ${tab === "provider" ? "bg-blue-600 text-white shadow" : "text-gray-600 hover:bg-gray-100"}`}
-//             aria-pressed={tab === "provider"}
-//           >
-//             Provider
-//           </button>
-//         </div>
-
-//         <div className="p-6">
-//           {apiError && <div role="alert" className="mb-4 text-sm text-red-700 bg-red-50 p-3 rounded">{apiError}</div>}
-
-//           {tab === "user" ? (
-//             <form onSubmit={handleUserRegister} className="space-y-4" aria-label="User register form">
-//               <label className="block text-sm">
-//                 <span className="text-gray-600">Full name</span>
-//                 <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="mt-1 w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-200 transition" placeholder="Your full name" />
-//                 {errors.userName && <p className="text-xs text-red-600 mt-1">{errors.userName}</p>}
-//               </label>
-
-//               <label className="block text-sm">
-//                 <span className="text-gray-600">Email</span>
-//                 <input type="email" value={userEmail} onChange={(e) => setUserEmail(e.target.value)} className="mt-1 w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-200 transition" placeholder="you@example.com" />
-//                 {errors.userEmail && <p className="text-xs text-red-600 mt-1">{errors.userEmail}</p>}
-//               </label>
-
-//               <label className="block text-sm">
-//                 <span className="text-gray-600">Password</span>
-//                 <input type="password" value={userPassword} onChange={(e) => setUserPassword(e.target.value)} className="mt-1 w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-200 transition" placeholder="At least 6 characters" />
-//                 {errors.userPassword && <p className="text-xs text-red-600 mt-1">{errors.userPassword}</p>}
-//               </label>
-
-//               <button type="submit" disabled={loading} className="w-full px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">{loading ? "Creating..." : "Create account"}</button>
-//             </form>
-//           ) : (
-//             <form onSubmit={handleProviderRegister} className="space-y-4" aria-label="Provider register form">
-//               <label className="block text-sm">
-//                 <span className="text-gray-600">Business / Provider Name</span>
-//                 <input type="text" value={provBusiness} onChange={(e) => setProvBusiness(e.target.value)} className="mt-1 w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-200 transition" placeholder="e.g. Joe's Plumbing" />
-//                 {errors.provBusiness && <p className="text-xs text-red-600 mt-1">{errors.provBusiness}</p>}
-//               </label>
-
-//               <label className="block text-sm">
-//                 <span className="text-gray-600">Service Type</span>
-//                 <select value={provServiceType} onChange={(e) => setProvServiceType(e.target.value)} className="mt-1 w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-200 transition">
-//                   <option value="">Select a service</option>
-//                   <option value="plumbing">Plumbing</option>
-//                   <option value="electrician">Electrician</option>
-//                   <option value="cleaning">Cleaning</option>
-//                   <option value="carpentry">Carpentry</option>
-//                   <option value="other">Other</option>
-//                 </select>
-//                 {errors.provServiceType && <p className="text-xs text-red-600 mt-1">{errors.provServiceType}</p>}
-//               </label>
-
-//               <label className="block text-sm">
-//                 <span className="text-gray-600">Email</span>
-//                 <input type="email" value={provEmail} onChange={(e) => setProvEmail(e.target.value)} className="mt-1 w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-200 transition" placeholder="provider@example.com" />
-//                 {errors.provEmail && <p className="text-xs text-red-600 mt-1">{errors.provEmail}</p>}
-//               </label>
-
-//               <label className="block text-sm">
-//                 <span className="text-gray-600">Password</span>
-//                 <input type="password" value={provPassword} onChange={(e) => setProvPassword(e.target.value)} className="mt-1 w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-200 transition" placeholder="At least 6 characters" />
-//                 {errors.provPassword && <p className="text-xs text-red-600 mt-1">{errors.provPassword}</p>}
-//               </label>
-
-//               <button type="submit" disabled={loading} className="w-full px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">{loading ? "Creating..." : "Create provider account"}</button>
-//             </form>
-//           )}
-//         </div>
-
-//         <div className="px-6 py-4 border-t text-center text-sm text-gray-600">
-//           Already have an account? <a className="text-blue-600 hover:underline" href="/login">Sign in</a>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -253,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../auth/api";
 import { useAuth } from "../auth/useAuth";
 
-export default function Register() {
+export default function Signup() {
   const [tab, setTab] = useState("user"); // "user" or "provider"
 
   // user fields
@@ -291,7 +47,7 @@ export default function Register() {
 
     setLoading(true);
     try {
-      const data = await apiFetch("/api/auth/register", {
+      const data = await apiFetch("/auth/register", {
         method: "POST",
         body: JSON.stringify({
           role: "user",
@@ -330,7 +86,7 @@ export default function Register() {
 
     setLoading(true);
     try {
-      const data = await apiFetch("/api/auth/register", {
+      const data = await apiFetch("/auth/register", {
         method: "POST",
         body: JSON.stringify({
           role: "provider",

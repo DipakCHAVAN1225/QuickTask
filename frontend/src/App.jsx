@@ -68,3 +68,106 @@ export const IconPhone = () => (
 <path d="M22 16.92V21a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3 5.18 2 2 0 0 1 5 3h4.09a2 2 0 0 1 2 1.72c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.18l-1.27 1.27a16 16 0 0 0 7.27 7.27l1.27-1.27a2 2 0 0 1 2.18-.45c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z" />
 </svg>
 );
+
+// // App.js - Main React Component
+// import React, { useState, useEffect } from 'react';
+// import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import Login from './components/Login';
+// import Register from './components/Register';
+// import UserDashboard from './components/UserDashboard';
+// import ProviderDashboard from './components/ProviderDashboard';
+
+// function App() {
+//   const [user, setUser] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     // Check if user is logged in
+//     const token = localStorage.getItem('token');
+//     if (token) {
+//       fetchUser(token);
+//     } else {
+//       setLoading(false);
+//     }
+//   }, []);
+
+//   const fetchUser = async (token) => {
+//     try {
+//       const response = await fetch('http://localhost:5000/api/auth/me', {
+//         headers: {
+//           'Authorization': `Bearer ${token}`
+//         }
+//       });
+
+//       if (response.ok) {
+//         const data = await response.json();
+//         setUser(data.user);
+//       } else {
+//         localStorage.removeItem('token');
+//       }
+//     } catch (error) {
+//       console.error('Error fetching user:', error);
+//       localStorage.removeItem('token');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleLogin = (userData, token) => {
+//     localStorage.setItem('token', token);
+//     setUser(userData);
+//   };
+
+//   const handleLogout = () => {
+//     localStorage.removeItem('token');
+//     setUser(null);
+//   };
+
+//   if (loading) {
+//     return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading...</div>;
+//   }
+
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/login" element={
+//           user ? (
+//             <Navigate to={user.role === 'service_provider' ? '/provider' : '/dashboard'} />
+//           ) : (
+//             <Login onLogin={handleLogin} />
+//           )
+//         } />
+        
+//         <Route path="/register" element={
+//           user ? (
+//             <Navigate to={user.role === 'service_provider' ? '/provider' : '/dashboard'} />
+//           ) : (
+//             <Register onRegister={handleLogin} />
+//           )
+//         } />
+
+//         <Route path="/dashboard" element={
+//           user && user.role === 'user' ? (
+//             <UserDashboard user={user} onLogout={handleLogout} />
+//           ) : (
+//             <Navigate to="/login" />
+//           )
+//         } />
+
+//         <Route path="/provider" element={
+//           user && user.role === 'service_provider' ? (
+//             <ProviderDashboard user={user} onLogout={handleLogout} />
+//           ) : (
+//             <Navigate to="/login" />
+//           )
+//         } />
+
+//         <Route path="/" element={
+//           <Navigate to={user ? (user.role === 'service_provider' ? '/provider' : '/dashboard') : '/login'} />
+//         } />
+//       </Routes>
+//     </Router>
+//   );
+// }
+
+// export default App;
