@@ -6,6 +6,7 @@ import HowItWorks from './components/HowItWorks'
 import Testimonials from './components/Testimonials'
 import Footer from './components/Footer'
 import ImageSlider from './components/ImageSlider'
+import ProviderListing from './components/ProviderListing'
 
  
 
@@ -21,6 +22,7 @@ return (
 <ImageSlider />
 <Categories />
 <ServicesGrid />
+<ProviderListing />
 <HowItWorks />
 <Testimonials />
 </main>

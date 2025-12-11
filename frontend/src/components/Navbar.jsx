@@ -14,7 +14,9 @@ export default function Navbar() {
 
           <nav className="hidden md:flex gap-6 ml-6 text-sm text-gray-600">
             <a className="hover:text-indigo-600" href="#services">Services</a>
+            <a className="hover:text-indigo-600" href="#ProvderListing">Provider</a>
             <a className="hover:text-indigo-600" href="#how">How it works</a>
+
             <a className="hover:text-indigo-600" href="#testimonials">Testimonials</a>
           </nav>
         </div>
