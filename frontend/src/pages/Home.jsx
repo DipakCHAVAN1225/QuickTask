@@ -153,12 +153,12 @@ export default function Home() {
             </div>
             <div style={{ marginTop: 14 }}>
               <button className="hc-btn bg-blue-700" style={{ width: "100%" }}>Book Now</button>
-              {/* <Link 
+              <Link 
             to="/providers"
             className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow text-sm font-medium"
           >
             Book Now
-          </Link> */}
+          </Link>
             </div>
           </div>
         </div>
