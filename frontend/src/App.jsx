@@ -3,7 +3,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 // import { AuthProvider } from "./context/AuthContext";
-import { AuthProvider } from './auth/useAuth';
+import { AuthProvider } from './auth/AuthContext';
 
 // Components
 import Navbar from "./components/Navbar";

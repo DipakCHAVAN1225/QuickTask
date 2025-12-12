@@ -4,7 +4,7 @@ import { IconPhone } from '../App'
 
 export default function Hero(){
   return (
-    <section className="max-w-screen-2xl mx-auto px-6 py-8 md:py-12 min-h-screen md:min-h-[90vh] flex items-center">
+    <section className="max-w-screen-2xl mx-auto px-6 py-8 md:py-12 min-h-screen md:min-h-[90vh] flex items-center pt-20 md:pt-24">
       {/* Main Grid */}
       <div className="grid md:grid-cols-2 gap-12 items-center">
         

@@ -160,9 +160,7 @@ app.post('/api/auth/register', async (req, res) => {
         role: user.role,
         businessName: user.businessName,
         serviceType: user.serviceType,
-        phone: user.phone,
-        address: user.address,
-        dp: user.dp
+
       }
     });
 

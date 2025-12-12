@@ -86,7 +86,7 @@ export default function Login() {
       });
 
       auth.login({ token: data.token, user: data.user, remember: true });
-      navigate("/providers");
+      navigate("/ProviderDashboard");
     } catch (err) {
       setApiError(err.message);
     } finally {
