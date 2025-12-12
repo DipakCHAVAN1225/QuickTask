@@ -7,33 +7,49 @@ import HowItWorks from './components/HowItWorks'
 import Testimonials from './components/Testimonials'
 import Footer from './components/Footer'
 import ImageSlider from './components/ImageSlider'
+import ProviderListing from './components/ProviderListing'
+import ProviderBooking from './components/ProviderBooking'
+import ProviderDashboard from './pages/ProviderDashboard'
+import MyBookings from './pages/MyBookings'
+import MyProfile from './pages/MyProfile'
+import { Routes, Route } from 'react-router-dom';
 
- 
-
-
-
-export default function App(){
-return (
-<div className="min-h-screen bg-gray-50 text-gray-800">
-<Navbar />
-<main>
-<Hero />
-<ImageSlider />
-<ImageSlider />
-<Categories />
-<ServicesGrid />
-<HowItWorks />
-<Testimonials />
-</main>
-<Footer />
-</div>
-)
+function HomePage() {
+  return (
+    <div className="min-h-screen bg-gray-50 text-gray-800">
+      <main>
+        <Hero />
+        <ImageSlider />
+        <Categories />
+        <ServicesGrid />
+        <ProviderListing />
+        <HowItWorks />
+        <Testimonials />
+      </main>
+      <Footer />
+    </div>
+  );
 }
 
+export default function App(){
+  return (
+    <div className="min-h-screen bg-gray-50 text-gray-800">
+      <Navbar />
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/providers" element={<ProviderListing />} />
+          <Route path="/provider-dashboard" element={<ProviderDashboard />} />
+          <Route path="/my-bookings" element={<MyBookings />} />
+          <Route path="/my-profile" element={<MyProfile />} />
+        </Routes>
+      </main>
+      {/* <Footer /> */}
+    </div>
+  );
+}
 
-// ---------------------------
-// Inline SVG ICON HELPERS (Reusable icons)
-// ---------------------------
+// Your SVG icons...
 export const IconUser = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" className="icon">
     <path d="M12 20v-2a4 4 0 0 0-3-3.87" />
