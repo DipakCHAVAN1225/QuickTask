@@ -1,91 +1,10 @@
 
 
-// // backend/routes/auth.js
-// const express = require('express');
-// const router = express.Router();
-// const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
-
-// const User = require('../models/User');
-
-// // create token helper
-// function createToken(user) {
-//   return jwt.sign(
-//     { id: user._id.toString(), email: user.email, role: user.role },
-//     process.env.JWT_SECRET,
-//     { expiresIn: '7d' }
-//   );
-// }
-
-// // POST /api/auth/register
-// router.post('/Signup', async (req, res) => {
-//   try {
-//     const { name, email, password, role } = req.body;
-//     if (!name || !email || !password) {
-//       return res.status(400).json({ message: 'Name, email and password are required.' });
-//     }
-
-//     const existing = await User.findOne({ email: email.toLowerCase() });
-//     if (existing) return res.status(409).json({ message: 'Email already registered.' });
-
-//     const salt = await bcrypt.genSalt(10);
-//     const hashed = await bcrypt.hash(password, salt);
-
-//     const user = new User({
-//       name: name.trim(),
-//       email: email.toLowerCase().trim(),
-//       password: hashed,
-//       role: role || 'user'
-//     });
-
-//     await user.save();
-//     const token = createToken(user);
-
-//     res.status(201).json({
-//       message: 'User registered.',
-//       token,
-//       user: { id: user._id, name: user.name, email: user.email, role: user.role }
-//     });
-//   } catch (err) {
-//     console.error('Signup error:', err);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// });
-
-// // POST /api/auth/login
-// router.post('/login', async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     if (!email || !password) return res.status(400).json({ message: 'Email and password are required.' });
-
-//     const user = await User.findOne({ email: email.toLowerCase() });
-//     if (!user) return res.status(401).json({ message: 'Invalid credentials.' });
-
-//     const matched = await bcrypt.compare(password, user.password);
-//     if (!matched) return res.status(401).json({ message: 'Invalid credentials.' });
-
-//     const token = createToken(user);
-//     res.json({
-//       message: 'Login successful.',
-//       token,
-//       user: { id: user._id, name: user.name, email: user.email, role: user.role }
-//     });
-//   } catch (err) {
-//     console.error('Login error:', err);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// });
-
-// // optional quick test route: GET /api/auth/test
-// router.get('/test', (req, res) => res.send('Auth route mounted'));
-
-// module.exports = router;
-
 
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('./models/User');
 const auth = require('../middleware/Auth');
 
 const router = express.Router();

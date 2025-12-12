@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 2dd443cb57f15902eed4fc078bcaaeeabddf9352
 import React, { useEffect, useRef } from "react";
 
 export default function ImageSlider() {
