@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
+import { AuthProvider } from '../auth/useAuth';
 
 export default function Header() {
-  const { user, logout } = useAuth();
+  const { user, logout } = AuthProvider();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 

@@ -1,29 +1,35 @@
-// // frontend/src/auth/ProtectedRoute.jsx
-// import React from "react";
-// import { Navigate } from "react-router-dom";
-//  import { useAuth } from "../auth/useAuth";
 
-// export default function ProtectedRoute({ children }) {
-//   const { isAuthenticated, authReady } = useAuth();
-//   if (!authReady) return null;
-//   if (!isAuthenticated) return <Navigate to="/login" replace />;
-//   return children;
-// }
 
-import { Navigate } from 'react-router-dom';
+// frontend/src/components/ProtectedRoute.jsx
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../auth/useAuth";
 
-export function ProtectedRoute({ children, requiredRole = null }) {
-  const storedUser = localStorage.getItem('authUser');
-  const user = storedUser ? JSON.parse(storedUser) : null;
+export default function ProtectedRoute({ children, requiredRole }) {
+  const { user, loading } = useAuth();
 
-  // If no user, redirect to login
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Not authenticated - redirect to login
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  // If specific role required and user doesn't have it
+  // Check if user has required role
   if (requiredRole && user.role !== requiredRole) {
-    return <Navigate to="/unauthorized" replace />;
+    // Redirect to appropriate dashboard based on their actual role
+    const dashboardPath = user.role === "provider" ? "/provider-dashboard" : "/user-dashboard";
+    return <Navigate to={dashboardPath} replace />;
   }
 
   return children;
