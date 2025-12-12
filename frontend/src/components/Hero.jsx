@@ -33,7 +33,7 @@ export default function Hero(){
             </button>
             <button className="border-2 border-gray-300 hover:border-blue-600 text-gray-900 hover:text-blue-600 px-8 py-3.5 rounded-xl font-semibold transition-all duration-300">
               <div className="flex items-center gap-2">
-                <IconPhone className="w-5 h-5" />
+                <IconPhone className="w-5 h-6" />
                 Call Support
               </div>
             </button>

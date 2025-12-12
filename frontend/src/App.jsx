@@ -11,7 +11,7 @@ import ProviderListing from './components/ProviderListing'
 import ProviderBooking from './components/ProviderBooking'
 import ProviderDashboard from './pages/ProviderDashboard'
 import MyBookings from './pages/MyBookings'
-// import MyProfile from './pages/MyProfile'
+import MyProfile from './pages/MyProfile'
 import { Routes, Route } from 'react-router-dom';
 
 function HomePage() {
@@ -19,7 +19,6 @@ function HomePage() {
     <div className="min-h-screen bg-gray-50 text-gray-800">
       <main>
         <Hero />
-        <ImageSlider />
         <ImageSlider />
         <Categories />
         <ServicesGrid />
@@ -42,7 +41,7 @@ export default function App(){
           <Route path="/providers" element={<ProviderListing />} />
           <Route path="/provider-dashboard" element={<ProviderDashboard />} />
           <Route path="/my-bookings" element={<MyBookings />} />
-          {/* <Route path="/my-profile" element={<MyProfile />} /> */}
+          <Route path="/my-profile" element={<MyProfile />} />
         </Routes>
       </main>
       {/* <Footer /> */}
