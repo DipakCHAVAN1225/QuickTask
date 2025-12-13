@@ -70,7 +70,7 @@ function HomePage() {
         <Categories />
         <ServicesGrid />
         <ProviderListing />
-        <HowItWorks />
+        {/* <HowItWorks /> */}
         <Testimonials />
       </main>
       <ProviderDashboard />
@@ -88,6 +88,9 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/providers" element={<ProviderListing />} />
+      <Route path="/testimonials" element={<Testimonials />} />
+      <Route path="/HowItWorks" element={<HowItWorks />} />
+      <Route path="/services" element={<ServicesGrid />} />
 
       {/* Protected User Routes */}
       <Route

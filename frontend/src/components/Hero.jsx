@@ -29,7 +29,7 @@ export default function Hero(){
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              Browse Services
+            <a href="#services">  Browse Services</a>
             </button>
             <button className="border-2 border-gray-300 hover:border-blue-600 text-gray-900 hover:text-blue-600 px-8 py-3.5 rounded-xl font-semibold transition-all duration-300">
               <div className="flex items-center gap-2">

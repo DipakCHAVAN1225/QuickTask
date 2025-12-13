@@ -861,7 +861,7 @@
 
 
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { LogOut, Settings, Calendar, History, ChevronDown, User, Menu, X } from 'lucide-react';
 import { useAuth } from '../auth/useAuth';
 
@@ -995,7 +995,7 @@ export default function Navbar() {
 
             <nav className="hidden lg:flex gap-10 ml-8 text-sm font-medium">
               <Link to="/" className="text-gray-700 hover:text-indigo-600 transition">Home</Link>
-              <a href="#services" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">Services</a>
+              <a href="#providers" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">Services</a>
               <Link to="/providers" className="text-gray-700 hover:text-indigo-600 transition">Find Provider</Link>
               <a href="#how" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">How it works</a>
             </nav>
@@ -1100,12 +1100,41 @@ export default function Navbar() {
             Quick<span className="text-gray-900">Task</span>
           </Link>
 
-          <nav className="hidden lg:flex gap-10 ml-8 text-sm font-medium">
+          {/* <nav className="hidden lg:flex gap-10 ml-8 text-sm font-medium">
             <a href="#services" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">Services</a>
             <a href="#providers" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">Provider</a>
             <a href="#how" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">How it works</a>
-            <a href="#testimonials" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">Testimonials</a>
-          </nav>
+            <a href="" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer"><NavLink to="/testimonials">testimonials</NavLink></a>
+          </nav> */}
+          <nav className="hidden lg:flex gap-10 ml-8 text-sm font-medium">
+  <NavLink
+    to="/Services"
+    className="text-gray-700 hover:text-indigo-600 transition cursor-pointer"
+  >
+    Services
+  </NavLink>
+
+  <NavLink
+    to="/providers"
+    className="text-gray-700 hover:text-indigo-600 transition cursor-pointer"
+  >
+    Provider
+  </NavLink>
+
+  <NavLink
+    to="/HowItWorks"
+    className="text-gray-700 hover:text-indigo-600 transition cursor-pointer"
+  >
+    How it works
+  </NavLink>
+
+  <NavLink
+    to="/testimonials"
+    className="text-gray-700 hover:text-indigo-600 transition cursor-pointer"
+  >
+    Testimonials
+  </NavLink>
+</nav>
         </div>
 
         {/* Buttons */}
