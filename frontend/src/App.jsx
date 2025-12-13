@@ -70,7 +70,7 @@ function HomePage() {
         <Categories />
         <ServicesGrid />
         <ProviderListing />
-        {/* <HowItWorks /> */}
+        <HowItWorks />
         <Testimonials />
       </main>
       <ProviderDashboard />
