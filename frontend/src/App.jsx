@@ -1,8 +1,8 @@
 
+
 // frontend/src/App.jsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-// import { AuthProvider } from "./context/AuthContext";
 import { AuthProvider } from './auth/AuthContext';
 
 // Components
@@ -70,10 +70,9 @@ function HomePage() {
         <Categories />
         <ServicesGrid />
         <ProviderListing />
-        {/* <HowItWorks /> */}
+        <HowItWorks />
         <Testimonials />
       </main>
-      <ProviderDashboard />
       <Footer />
     </div>
   );
@@ -103,9 +102,18 @@ function AppRoutes() {
       />
 
       <Route
-        path="/my-bookings"
+        path="/userdashboard"
         element={
           <ProtectedRoute requiredRole="user">
+            <UserDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/my-bookings"
+        element={
+          <ProtectedRoute requiredRole="provider">
             <MyBookings />
           </ProtectedRoute>
         }
@@ -120,9 +128,18 @@ function AppRoutes() {
         }
       />
 
-      {/* Protected Provider Routes */}
+      {/* Protected Provider Routes - ONLY ONE DEFINITION */}
       <Route
         path="/provider-dashboard"
+        element={
+          <ProtectedRoute requiredRole="provider">
+            <ProviderDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/providerdashboard"
         element={
           <ProtectedRoute requiredRole="provider">
             <ProviderDashboard />
@@ -140,7 +157,7 @@ function AppRoutes() {
 export default function App() {
   return (
     <AuthProvider>
-      {/* Navbar is INSIDE AuthProvider so it can use useAuth() */}
+      {/* ✅ Navbar is INSIDE AuthProvider so it can use useAuth() */}
       <Navbar />
       <main className="min-h-screen bg-gray-50 text-gray-800">
         <AppRoutes />

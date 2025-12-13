@@ -47,6 +47,8 @@ export default function Signup() {
 
     setLoading(true);
     try {
+      console.log("📤 User registration with:", { name: userName, email: userEmail, role: "user" });
+      
       const data = await apiFetch("/auth/register", {
         method: "POST",
         body: JSON.stringify({
@@ -57,8 +59,12 @@ export default function Signup() {
         })
       });
 
-      // Login user with response data
+      console.log("✅ Registration response:", data);
+
+      // ✅ FIXED: Check the response has token and user
       if (data?.token && data?.user) {
+        console.log("📝 Calling login with:", { token: data.token, user: data.user });
+        
         login({
           token: data.token,
           user: data.user
@@ -66,9 +72,13 @@ export default function Signup() {
         
         setSuccessMsg("Account created successfully. Redirecting...");
         // Redirect to user dashboard
-        setTimeout(() => navigate("/user-dashboard"), 900);
+        setTimeout(() => navigate("/userdashboard"), 900);
+      } else {
+        setApiError("Registration failed - invalid response from server");
+        setLoading(false);
       }
     } catch (err) {
+      console.error("❌ Registration error:", err);
       setApiError(err.message || "Registration failed");
       setLoading(false);
     }
@@ -91,6 +101,8 @@ export default function Signup() {
 
     setLoading(true);
     try {
+      console.log("📤 Provider registration with:", { businessName: provBusiness, serviceType: provServiceType, email: provEmail, role: "provider" });
+      
       const data = await apiFetch("/auth/register", {
         method: "POST",
         body: JSON.stringify({
@@ -102,8 +114,12 @@ export default function Signup() {
         })
       });
 
-      // Login provider with response data
+      console.log("✅ Registration response:", data);
+
+      // ✅ FIXED: Check the response has token and user
       if (data?.token && data?.user) {
+        console.log("📝 Calling login with:", { token: data.token, user: data.user });
+        
         login({
           token: data.token,
           user: data.user
@@ -111,9 +127,13 @@ export default function Signup() {
         
         setSuccessMsg("Provider account created. Redirecting to dashboard...");
         // Redirect to provider dashboard
-        setTimeout(() => navigate("/provider-dashboard"), 900);
+        setTimeout(() => navigate("/providerdashboard"), 900);
+      } else {
+        setApiError("Registration failed - invalid response from server");
+        setLoading(false);
       }
     } catch (err) {
+      console.error("❌ Registration error:", err);
       setApiError(err.message || "Registration failed");
       setLoading(false);
     }

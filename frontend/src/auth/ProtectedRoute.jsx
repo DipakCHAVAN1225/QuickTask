@@ -28,7 +28,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
   // Check if user has required role
   if (requiredRole && user.role !== requiredRole) {
     // Redirect to appropriate dashboard based on their actual role
-    const dashboardPath = user.role === "provider" ? "/provider-dashboard" : "/user-dashboard";
+    const dashboardPath = user.role === "provider" ? "/providerdashboard" : "/userdashboard";
     return <Navigate to={dashboardPath} replace />;
   }
 
