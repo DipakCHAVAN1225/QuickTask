@@ -268,12 +268,6 @@ export default function Navbar() {
   >
     Testimonials
   </NavLink>
-  <NavLink
-    to="/providerdashboard"
-    className="text-gray-700 hover:text-indigo-600 transition cursor-pointer"
-  >
-    rpovider dashboard
-  </NavLink>
 </nav>
         </div>
 

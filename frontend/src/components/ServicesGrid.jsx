@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 const categories = [
   {
     id: 1,
@@ -93,13 +95,17 @@ export default function HomeServices() {
 
                 <div className="mt-2 text-indigo-600 font-semibold">{s.price}</div>
 
-                <div className="mt-4 flex items-center gap-3">
-                  <button className="flex-1 py-2 rounded-md bg-black text-white">
+                <div className="mt-4 flex justify-between gap-5">
+                   <NavLink to="/providers">
+                    <button className=" px-5 py-2 hover:cursor-pointer rounded-md bg-black text-white">
                     View details
                   </button>
-                  <button className="py-2 px-4 rounded-md bg-black text-white">
+                    </NavLink>
+                  <NavLink to="/providers">
+                    <button className="py-2 px-4  hover:cursor-pointer rounded-md bg-indigo-600 text-white ">
                     Book
                   </button>
+                  </NavLink>
                 </div>
               </div>
             </div>
