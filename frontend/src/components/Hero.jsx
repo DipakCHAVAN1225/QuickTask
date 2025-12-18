@@ -50,7 +50,7 @@ export default function Hero(){
               <p className="text-sm text-gray-600 mt-1">Service Time</p>
             </div>
             <div>
-              <div className="text-3xl font-bold text-gray-900">₹100%</div>
+              <div className="text-3xl font-bold text-gray-900">100%</div>
               <p className="text-sm text-gray-600 mt-1">Verified</p>
             </div>
           </div>

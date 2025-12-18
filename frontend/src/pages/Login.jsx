@@ -52,7 +52,7 @@ export default function Login() {
       });
 
       auth.login({ token: data.token, user: data.user, remember: userRemember });
-      navigate("/");
+      navigate("/userdashboard");
     } catch (err) {
       setApiError(err.message);
     } finally {
@@ -86,7 +86,7 @@ export default function Login() {
       });
 
       auth.login({ token: data.token, user: data.user, remember: true });
-      navigate("/ProviderDashboard");
+      navigate("/providerdashboard");
     } catch (err) {
       setApiError(err.message);
     } finally {

@@ -1,3 +1,4 @@
+
 import { Wrench, UserCheck, CreditCard } from "lucide-react";
 
 export default function HowItWorks() {
@@ -7,11 +8,12 @@ export default function HowItWorks() {
       className="py-16 bg-gradient-to-b from-white via-indigo-50/40 to-white"
     >
       {/* Heading */}
-      <h2 className="text-4xl text-center font-extrabold text-gray-900 mb-12">
+      <div className="text-4xl text-center font-extrabold text-gray-900 mb-16">
         How It <span className="text-indigo-600">Works</span>
-      </h2>
+      </div>
 
-      <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+      {/* Cards Grid */}
+      <div className="max-w-6xl mx-auto px-6 grid gap-8 md:grid-cols-3">
         
         {/* Card 1 */}
         <div className="group text-center p-8 rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
