@@ -1,135 +1,1772 @@
 
-import React, { useState } from 'react';
-import { Star, MapPin, Clock, Award, Phone, MessageCircle, ChevronLeft, Calendar, Users } from 'lucide-react';
 
-export default function ProviderBooking({ provider, onBack }) {
+// const handlePayment = async (e) => {
+//   e.preventDefault();
+
+//   if (loadinng) {
+//   return; // ⏳ wait until auth is restored
+// }
+
+// if (!user || !user._id) {
+//   setError("Please login to continue");
+//   return;
+// }
+
+
+//   if (!providerData || !providerData._id) {
+//     setError("Provider not found");
+//     return;
+//   }
+
+//   if (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+//     setError("Please fill dummy card details");
+//     return;
+//   }
+
+//   setLoading(true);
+
+//   try {
+//     const res = await fetch("http://localhost:3000/api/payment/dummy-pay", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         userId: user._id,
+//         providerId: providerData._id,
+//         serviceName: providerData.service,
+//         amount: bookingDetails.totalAmount,
+//       }),
+//     });
+
+//     // 🚨 HANDLE NON-JSON RESPONSES
+//     if (!res.ok) {
+//       const text = await res.text();
+//       throw new Error(text || "Payment failed");
+//     }
+
+//     const data = await res.json();
+
+//     if (!data.success) {
+//       throw new Error(data.message || "Payment failed");
+//     }
+
+//     setShowPayment(false);
+//     setShowConfirmation(true);
+
+//     setTimeout(() => {
+//       setShowConfirmation(false);
+//       onBack?.();
+//     }, 3000);
+//   } catch (err) {
+//     console.error("PAYMENT FRONTEND ERROR:", err);
+//     setError("Payment failed. Please try again.");
+//   } finally {
+//     // ✅ THIS WAS NOT REACHED EARLIER
+//     setLoading(false);
+//   }
+// };
+
+
+
+
+//   const getDaysInMonth = (date) => {
+//     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+//   };
+
+//   const getFirstDayOfMonth = (date) => {
+//     return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+//   };
+
+//   const generateCalendarDays = () => {
+//     const daysInMonth = getDaysInMonth(calendarMonth);
+//     const firstDay = getFirstDayOfMonth(calendarMonth);
+//     const days = [];
+
+//     for (let i = 0; i < firstDay; i++) {
+//       days.push(null);
+//     }
+
+//     for (let i = 1; i <= daysInMonth; i++) {
+//       days.push(i);
+//     }
+
+//     return days;
+//   };
+
+//   const isDateDisabled = (day) => {
+//     if (!day) return true;
+//     const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
+//     const today = new Date();
+//     today.setHours(0, 0, 0, 0);
+//     return date < today;
+//   };
+
+//   const getDateString = (day) => {
+//     const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
+//     return date.toISOString().split('T')[0];
+//   };
+
+//   const handlePrevMonth = () => {
+//     setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1));
+//   };
+
+//   const handleNextMonth = () => {
+//     setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1));
+//   };
+
+//   const monthName = calendarMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+//   const calendarDays = generateCalendarDays();
+
+//   if (loading && !providerData) {
+//     return (
+//       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+//         <div className="text-center">
+//           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+//           <p className="mt-4 text-gray-600">Loading provider details...</p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   if (!providerData) {
+//     return (
+//       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+//         <div className="bg-white rounded-2xl shadow-md p-8 text-center max-w-md">
+//           <p className="text-red-600 font-semibold mb-4">{error || 'Failed to load provider'}</p>
+//           <button
+//             onClick={onBack}
+//             className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700"
+//           >
+//             Go Back
+//           </button>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   if (showPayment) {
+//     return (
+//       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+//         <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+//           <button
+//             onClick={() => setShowPayment(false)}
+//             className="mb-6 p-2 hover:bg-gray-100 rounded-lg transition"
+//           >
+//             <ChevronLeft size={24} />
+//           </button>
+
+//           <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Details</h2>
+//           <p className="text-gray-600 mb-6">Complete your booking by adding payment information</p>
+
+//           {error && (
+//             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+//               <p className="text-red-600 text-sm">{error}</p>
+//             </div>
+//           )}
+
+//           <div className="bg-blue-50 rounded-xl p-4 mb-6">
+//             <div className="space-y-3">
+//               <div className="flex justify-between">
+//                 <span className="text-gray-600">Provider</span>
+//                 <span className="font-semibold text-gray-900">{bookingDetails?.providerName}</span>
+//               </div>
+//               <div className="flex justify-between">
+//                 <span className="text-gray-600">Date & Time</span>
+//                 <span className="font-semibold text-gray-900">{new Date(bookingDetails?.date).toLocaleDateString()} {bookingDetails?.time}</span>
+//               </div>
+//               <div className="border-t border-blue-200 pt-3 flex justify-between">
+//                 <span className="font-bold text-gray-900">Total Amount</span>
+//                 <span className="text-xl font-bold text-blue-600">₹{bookingDetails?.totalAmount}</span>
+//               </div>
+//             </div>
+//           </div>
+
+//           <form onSubmit={handlePayment} className="space-y-4">
+//             <div>
+//               <label className="block text-sm font-semibold text-gray-900 mb-2">Card Number</label>
+//               <input
+//                 type="text"
+//                 placeholder="1234 5678 9012 3456"
+//                 value={cardDetails.number}
+//                 onChange={(e) => {
+//                   let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+//                   let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+//                   setCardDetails({ ...cardDetails, number: formatted });
+//                 }}
+//                 maxLength="19"
+//                 className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+//                 required
+//               />
+//             </div>
+
+//             <div className="grid grid-cols-2 gap-4">
+//               <div>
+//                 <label className="block text-sm font-semibold text-gray-900 mb-2">Expiry</label>
+//                 <input
+//                   type="text"
+//                   placeholder="MM/YY"
+//                   value={cardDetails.expiry}
+//                   onChange={(e) => {
+//                     let value = e.target.value.replace(/[^0-9]/g, '');
+//                     if (value.length >= 2) {
+//                       value = value.slice(0, 2) + '/' + value.slice(2, 4);
+//                     }
+//                     setCardDetails({ ...cardDetails, expiry: value });
+//                   }}
+//                   maxLength="5"
+//                   className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+//                   required
+//                 />
+//               </div>
+
+//               <div>
+//                 <label className="block text-sm font-semibold text-gray-900 mb-2">CVV</label>
+//                 <input
+//                   type="text"
+//                   placeholder="123"
+//                   value={cardDetails.cvv}
+//                   onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value.replace(/[^0-9]/g, '') })}
+//                   maxLength="4"
+//                   className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+//                   required
+//                 />
+//               </div>
+//             </div>
+
+//             <button
+//               type="submit"
+//               disabled={loading}
+//               className={`w-full py-3 px-4 rounded-lg font-bold text-white transition mt-6 ${
+//                 loading
+//                   ? 'bg-gray-400 cursor-not-allowed'
+//                   : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+//               }`}
+//             >
+//               {loading ? 'Processing...' : `Pay ₹${bookingDetails?.totalAmount}`}
+//             </button>
+
+//             <p className="text-xs text-gray-600 text-center mt-4">
+//               💳 Your payment is secure and encrypted
+//             </p>
+//           </form>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   if (showConfirmation) {
+//     return (
+//       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+//         <style>{`
+//           @keyframes scaleIn {
+//             from { transform: scale(0.8); opacity: 0; }
+//             to { transform: scale(1); opacity: 1; }
+//           }
+//           @keyframes slideDown {
+//             from { transform: translateY(-20px); opacity: 0; }
+//             to { transform: translateY(0); opacity: 1; }
+//           }
+//           .animate-scale-in { animation: scaleIn 0.4s ease-out; }
+//           .animate-slide-down { animation: slideDown 0.5s ease-out; }
+//         `}</style>
+        
+//         <div className="w-full max-w-md space-y-4 animate-scale-in">
+//           <div className="text-center mb-6">
+//             <div className="inline-block relative">
+//               <div className="absolute inset-0 bg-green-400 rounded-full opacity-25 animate-pulse"></div>
+//               <div className="relative bg-green-500 rounded-full p-4">
+//                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+//                 </svg>
+//               </div>
+//             </div>
+//           </div>
+
+//           <div className="bg-white rounded-2xl shadow-2xl overflow-hidden animate-slide-down">
+//             <div className="bg-gradient-to-r from-green-500 to-green-600 px-8 py-6">
+//               <h2 className="text-2xl font-bold text-white">Booking Confirmed!</h2>
+//               <p className="text-green-100 mt-1">Your appointment is secured</p>
+//             </div>
+
+//             <div className="p-8 space-y-6">
+//               <div className="flex items-start gap-4">
+//                 <img
+//                   src={providerData.dp}
+//                   alt={providerData.name}
+//                   className="w-16 h-16 rounded-full border-4 border-green-100"
+//                 />
+//                 <div>
+//                   <p className="text-sm text-gray-600">Service Provider</p>
+//                   <h3 className="text-xl font-bold text-gray-900">{providerData.name}</h3>
+//                   <p className="text-blue-600 font-semibold text-sm">{providerData.service}</p>
+//                 </div>
+//               </div>
+
+//               <div className="border-t border-gray-200 pt-6 space-y-4">
+//                 <div className="flex items-center justify-between">
+//                   <div className="flex items-center gap-3">
+//                     <div className="bg-blue-100 rounded-lg p-2">
+//                       <Calendar className="w-5 h-5 text-blue-600" />
+//                     </div>
+//                     <div>
+//                       <p className="text-xs text-gray-600">Date & Time</p>
+//                       <p className="font-bold text-gray-900">{new Date(bookingDetails?.date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+//                       <p className="font-semibold text-blue-600">{bookingDetails?.time}</p>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 <div className="flex items-center gap-3">
+//                   <div className="bg-purple-100 rounded-lg p-2">
+//                     <MapPin className="w-5 h-5 text-purple-600" />
+//                   </div>
+//                   <div>
+//                     <p className="text-xs text-gray-600">Location</p>
+//                     <p className="font-semibold text-gray-900">{providerData.location}</p>
+//                   </div>
+//                 </div>
+
+//                 <div className="bg-green-50 rounded-xl p-4 space-y-3">
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-gray-600">Services</span>
+//                     <span className="font-semibold text-gray-900">{bookingDetails?.quantity}x</span>
+//                   </div>
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-gray-600">Price per service</span>
+//                     <span className="font-semibold text-gray-900">₹{providerData.price}</span>
+//                   </div>
+//                   <div className="border-t border-green-200 pt-3 flex justify-between items-center">
+//                     <span className="font-bold text-gray-900">Total Paid</span>
+//                     <span className="text-2xl font-bold text-green-600">₹{bookingDetails?.totalAmount}</span>
+//                   </div>
+//                 </div>
+//               </div>
+
+//               <div className="bg-gray-50 rounded-lg p-3">
+//                 <p className="text-xs text-gray-600">Booking Reference</p>
+//                 <p className="font-bold text-gray-900 text-sm">#BK{Date.now().toString().slice(-8)}</p>
+//               </div>
+
+//               <div className="space-y-2 bg-blue-50 rounded-lg p-4">
+//                 <div className="flex items-center gap-2">
+//                   <span className="text-lg">📞</span>
+//                   <span className="text-sm text-gray-700"><strong>Provider will contact you</strong> to confirm details</span>
+//                 </div>
+//                 <div className="flex items-center gap-2">
+//                   <span className="text-lg">📧</span>
+//                   <span className="text-sm text-gray-700"><strong>Confirmation email sent</strong> to your registered email</span>
+//                 </div>
+//               </div>
+//             </div>
+
+//             <div className="bg-gray-50 px-8 py-4 border-t border-gray-200">
+//               <p className="text-xs text-gray-600 text-center">
+//                 Redirecting to home in 3 seconds...
+//               </p>
+//             </div>
+//           </div>
+
+//           <div className="bg-white rounded-2xl shadow-md p-6 space-y-3">
+//             <h3 className="font-bold text-gray-900">Need Help?</h3>
+//             <button className="w-full text-blue-600 font-semibold hover:underline text-sm">
+//               📞 Contact Support
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-gray-50">
+//       <div className="bg-white shadow-sm sticky top-0 z-40">
+//         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-4">
+//           <button
+//             onClick={onBack}
+//             className="p-2 hover:bg-gray-100 rounded-lg transition"
+//           >
+//             <ChevronLeft size={24} />
+//           </button>
+//           <h1 className="text-2xl font-bold">Book Service</h1>
+//         </div>
+//       </div>
+
+//       <div className="max-w-6xl mx-auto px-4 py-8">
+//         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+//           <div className="lg:col-span-2 space-y-6">
+//             <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+//               <div className="h-64 bg-gradient-to-r from-blue-400 to-blue-600 relative overflow-hidden">
+//                 <img src={providerData.coverImage} alt={providerData.name} className="w-full h-full object-cover opacity-70" />
+//               </div>
+
+//               <div className="p-8 -mt-16 relative">
+//                 <div className="flex flex-col md:flex-row gap-6">
+//                   <img
+//                     src={providerData.dp}
+//                     alt={providerData.name}
+//                     className="w-32 h-32 rounded-full border-4 border-white shadow-lg flex-shrink-0"
+//                   />
+                  
+//                   <div className="flex-grow">
+//                     <h2 className="text-3xl font-bold text-gray-900">{providerData.name}</h2>
+//                     <p className="text-lg text-blue-600 font-semibold mt-1">{providerData.service}</p>
+
+//                     <div className="flex items-center gap-4 mt-4">
+//                       <div className="flex items-center gap-2">
+//                         <div className="flex">
+//                           {[...Array(5)].map((_, i) => (
+//                             <Star key={i} size={18} className="fill-yellow-400 text-yellow-400" />
+//                           ))}
+//                         </div>
+//                         <span className="font-bold text-gray-900">{providerData.rating}</span>
+//                         <span className="text-gray-600">({providerData.reviews} reviews)</span>
+//                       </div>
+//                     </div>
+
+//                     <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
+//                       <div>
+//                         <p className="text-sm text-gray-600">Experience</p>
+//                         <p className="font-bold text-gray-900">{providerData.experience}</p>
+//                       </div>
+//                       <div>
+//                         <p className="text-sm text-gray-600">Response Time</p>
+//                         <p className="font-bold text-gray-900">{providerData.responseTime}</p>
+//                       </div>
+//                       <div>
+//                         <p className="text-sm text-gray-600">Completion Rate</p>
+//                         <p className="font-bold text-gray-900">{providerData.completionRate}</p>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+
+//             <div className="bg-white rounded-2xl shadow-md p-8 space-y-4">
+//               <h3 className="text-xl font-bold text-gray-900">About</h3>
+//               <p className="text-gray-700 leading-relaxed">{providerData.description}</p>
+//               <p className="text-gray-600 italic">{providerData.aboutMe}</p>
+//             </div>
+
+//             <div className="bg-white rounded-2xl shadow-md p-8 space-y-4">
+//               <h3 className="text-xl font-bold text-gray-900">Services Offered</h3>
+//               <div className="grid grid-cols-2 gap-3">
+//                 {providerData.services?.map((service, idx) => (
+//                   <div key={idx} className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+//                     <span className="text-lg">✓</span>
+//                     <span className="text-gray-900 font-medium">{service}</span>
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+
+//             <div className="bg-white rounded-2xl shadow-md p-8 space-y-4">
+//               <h3 className="text-xl font-bold text-gray-900">Contact & Location</h3>
+//               <div className="space-y-3">
+//                 <div className="flex items-center gap-3">
+//                   <MapPin size={20} className="text-blue-600" />
+//                   <span className="text-gray-700">{providerData.location}</span>
+//                 </div>
+//                 <div className="flex items-center gap-3">
+//                   <Phone size={20} className="text-blue-600" />
+//                   <button className="text-blue-600 font-semibold hover:underline">Call Provider</button>
+//                 </div>
+//                 <div className="flex items-center gap-3">
+//                   <MessageCircle size={20} className="text-blue-600" />
+//                   <button className="text-blue-600 font-semibold hover:underline">Send Message</button>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+
+//           <div className="lg:col-span-1">
+//             <div className="bg-white rounded-2xl shadow-md p-6 sticky top-24 space-y-6">
+              
+//               <div className="border-b border-gray-200 pb-4">
+//                 <p className="text-sm text-gray-600 mb-2">Price per service</p>
+//                 <p className="text-3xl font-bold text-gray-900">₹{providerData.price}</p>
+//                 <p className="text-xs text-gray-500 mt-1">up to ₹{providerData.maxPrice}</p>
+//               </div>
+
+//               <div className="space-y-3 relative">
+//                 <label className="block font-semibold text-gray-900">Select Date</label>
+                
+//                 <div className="relative">
+//                   <button
+//                     onClick={() => setShowCalendarDropdown(!showCalendarDropdown)}
+//                     className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-left font-medium text-gray-900 hover:border-blue-300 transition flex items-center justify-between bg-white"
+//                   >
+//                     <span>{selectedDate ? new Date(selectedDate).toLocaleDateString() : 'Choose a date'}</span>
+//                     <ChevronRight size={20} className={`transition ${showCalendarDropdown ? 'rotate-90' : ''}`} />
+//                   </button>
+
+//                   {showCalendarDropdown && (
+//                     <div className="absolute top-full left-0 mt-2 bg-white border-2 border-gray-300 rounded-lg p-3 shadow-lg z-50 w-full">
+//                       <div className="flex items-center justify-between mb-3">
+//                         <button
+//                           onClick={handlePrevMonth}
+//                           className="p-1 hover:bg-gray-100 rounded transition"
+//                         >
+//                           <ChevronLeft size={18} />
+//                         </button>
+//                         <h4 className="text-sm font-semibold text-gray-900">{monthName}</h4>
+//                         <button
+//                           onClick={handleNextMonth}
+//                           className="p-1 hover:bg-gray-100 rounded transition"
+//                         >
+//                           <ChevronRight size={18} />
+//                         </button>
+//                       </div>
+
+//                       <div className="grid grid-cols-7 gap-1 mb-2">
+//                         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, idx) => (
+//                           <div key={`day-${idx}`} className="text-center text-xs font-bold text-gray-600 py-1">
+//                             {day.substring(0, 1)}
+//                           </div>
+//                         ))}
+//                       </div>
+
+//                       <div className="grid grid-cols-7 gap-1">
+//                         {calendarDays.map((day, idx) => {
+//                           const disabled = isDateDisabled(day);
+//                           const dateStr = day ? getDateString(day) : '';
+//                           const isSelected = dateStr === selectedDate;
+
+//                           return (
+//                             <button
+//                               key={idx}
+//                               onClick={() => {
+//                                 if (!disabled) {
+//                                   setSelectedDate(dateStr);
+//                                   setShowCalendarDropdown(false);
+//                                 }
+//                               }}
+//                               disabled={disabled}
+//                               className={`w-full py-1 rounded text-xs font-medium transition ${
+//                                 !day
+//                                   ? 'invisible'
+//                                   : disabled
+//                                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+//                                   : isSelected
+//                                   ? 'bg-blue-600 text-white'
+//                                   : 'text-gray-700 hover:bg-blue-100'
+//                               }`}
+//                             >
+//                               {day}
+//                             </button>
+//                           );
+//                         })}
+//                       </div>
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+
+//               {selectedDate && (
+//                 <div className="space-y-3">
+//                   <label className="block font-semibold text-gray-900">Select Time</label>
+//                   {availableTimes.length > 0 ? (
+//                     <div className="grid grid-cols-2 gap-2">
+//                       {availableTimes.map(time => (
+//                         <button
+//                           key={time}
+//                           onClick={() => setSelectedTime(time)}
+//                           className={`py-2 px-3 rounded-lg font-medium transition text-sm ${
+//                             selectedTime === time
+//                               ? 'bg-blue-600 text-white'
+//                               : 'border-2 border-gray-300 text-gray-700 hover:border-blue-300'
+//                           }`}
+//                         >
+//                           {time}
+//                         </button>
+//                       ))}
+//                     </div>
+//                   ) : (
+//                     <p className="text-gray-600 text-sm">No available times for this date</p>
+//                   )}
+//                 </div>
+//               )}
+
+//               {selectedTime && (
+//                 <div className="space-y-3">
+//                   <label className="block font-semibold text-gray-900">Number of Services</label>
+//                   <div className="flex items-center gap-4 border-2 border-gray-300 rounded-lg p-3">
+//                     <button
+//                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
+//                       className="text-xl text-gray-600 hover:text-gray-900 font-bold"
+//                     >
+//                       −
+//                     </button>
+//                     <span className="flex-grow text-center font-bold text-gray-900">{quantity}</span>
+//                     <button
+//                       onClick={() => setQuantity(quantity + 1)}
+//                       className="text-xl text-gray-600 hover:text-gray-900 font-bold"
+//                     >
+//                       +
+//                     </button>
+//                   </div>
+//                 </div>
+//               )}
+
+//               {selectedTime && (
+//                 <div className="border-t border-gray-200 pt-4 space-y-4">
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-gray-600">Subtotal</span>
+//                     <span className="font-semibold text-gray-900">₹{providerData.price * quantity}</span>
+//                   </div>
+//                   <div className="flex justify-between items-center">
+//                     <span className="text-gray-600">Platform Fee</span>
+//                     <span className="font-semibold text-gray-900">₹0</span>
+//                   </div>
+//                   <div className="border-t border-gray-200 pt-4 flex justify-between items-center">
+//                     <span className="font-bold text-gray-900">Total</span>
+//                     <span className="text-2xl font-bold text-blue-600">₹{providerData.price * quantity}</span>
+//                   </div>
+//                 </div>
+//               )}
+
+//               <button
+//                 onClick={handleBooking}
+//                 disabled={!selectedDate || !selectedTime}
+//                 className={`w-full py-3 px-4 rounded-lg font-bold text-white transition ${
+//                   selectedDate && selectedTime
+//                     ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+//                     : 'bg-gray-400 cursor-not-allowed'
+//                 }`}
+//               >
+//                 Proceed to Payment
+//               </button>
+
+//               <div className="bg-blue-50 rounded-lg p-4 space-y-2 text-xs text-gray-700">
+//                 <p><strong>✓ {providerData.policies?.cancellation}</strong></p>
+//                 <p><strong>✓ {providerData.policies?.rescheduling}</strong></p>
+//                 <p><strong>✓ {providerData.policies?.guarantee}</strong></p>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+import { Star, MapPin, Phone, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useAuth } from '../auth/useAuth';
+
+export default function ProviderBooking({ providerId, onBack }) {
+  const auth = useAuth();
+  const [providerData, setProviderData] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [availableTimes, setAvailableTimes] = useState([]);
+  const [calendarMonth, setCalendarMonth] = useState(new Date());
+  const [error, setError] = useState('');
+  const [showCalendarDropdown, setShowCalendarDropdown] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [bookingDetails, setBookingDetails] = useState(null);
+  const [bookingId, setBookingId] = useState(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '' });
 
-  // Use passed provider or default
-  const providerData = provider || {
-    id: 1,
-    name: 'Rajesh Kumar',
-    service: 'Plumbing',
-    rating: 4.8,
-    reviews: 245,
-    dp: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rajesh',
-    coverImage: '/Static/Ac_Installation_1.jpg',
-    location: 'Downtown, Pune',
-    price: 500,
-    maxPrice: 1000,
-    experience: '8 years',
-    availability: 'Available today',
-    description: 'Professional plumbing expert with 8 years of experience. Specializes in pipe installation, repairs, and maintenance. Quick response time and quality work guaranteed.',
-    services: [
-      'Pipe Installation',
-      'Leak Repair',
-      'Drain Cleaning',
-      'Faucet Installation'
-    ],
-    languages: ['Hindi', 'English', 'Marathi'],
-    responseTime: '15 mins',
-    completionRate: '98%',
-    aboutMe: 'I am a certified plumber with extensive experience in residential and commercial plumbing work. Customer satisfaction is my priority.',
-    workSamples: [
-      { title: 'Pipe Installation', image: '🔧' },
-      { title: 'Leak Repair', image: '💧' },
-      { title: 'Drain Cleaning', image: '🚰' }
-    ],
-    availableTimes: ['09:00 AM', '10:00 AM', '11:00 AM', '02:00 PM', '03:00 PM', '04:00 PM'],
-    policies: {
-      cancellation: 'Free cancellation up to 2 hours before appointment',
-      rescheduling: 'You can reschedule anytime',
-      guarantee: '100% satisfaction guarantee'
+  // Debug auth on component mount
+  useEffect(() => {
+    console.log('🔐 ProviderBooking mounted. Auth state:', {
+      hasToken: !!auth?.token,
+      hasUser: !!auth?.user,
+      token: auth?.token?.substring(0, 20) + '...',
+      user: auth?.user
+    });
+  }, [auth]);
+
+  useEffect(() => {
+    if (!providerId) {
+      setError('Provider ID is required');
+      setLoading(false);
+      return;
+    }
+    fetchProviderData();
+  }, [providerId]);
+
+  useEffect(() => {
+    if (selectedDate) {
+      fetchAvailableTimes(selectedDate);
+    }
+  }, [selectedDate]);
+
+  const fetchProviderData = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      
+      const response = await fetch(`http://localhost:3000/api/providers`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch provider data');
+      }
+      
+      const data = await response.json();
+      const provider = data.providers?.find(p => p.id === providerId);
+      
+      if (!provider) {
+        throw new Error('Provider not found');
+      }
+      
+      const completeProvider = {
+        ...provider,
+        coverImage: provider.coverImage || `https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500&h=300&fit=crop`,
+        description: provider.description || provider.bio || `Professional ${provider.service} expert with ${provider.experience} of experience.`,
+        aboutMe: provider.aboutMe || provider.bio || `I am a certified ${provider.service} provider with extensive experience in residential and commercial work.`,
+        responseTime: provider.responseTime || '15 mins',
+        completionRate: provider.completionRate || '95%',
+        policies: provider.policies || {
+          cancellation: 'Free cancellation up to 2 hours before appointment',
+          rescheduling: 'You can reschedule anytime',
+          guarantee: '100% satisfaction guarantee'
+        }
+      };
+      
+      setProviderData(completeProvider);
+    } catch (err) {
+      console.error('Error fetching provider:', err);
+      setError(`Failed to load provider: ${err.message}`);
+      setProviderData(null);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleBooking = () => {
-    setShowConfirmation(true);
-    // Show confirmation for 2 seconds then go back
-    setTimeout(() => {
-      setShowConfirmation(false);
-      onBack(); // Go back to provider listing/home
-    }, 2000);
+  const fetchAvailableTimes = async (date) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/providers/${providerId}/available-times?date=${date}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableTimes(data.availableTimes || []);
+      } else {
+        setAvailableTimes(['09:00 AM', '10:00 AM', '11:00 AM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM']);
+      }
+    } catch (err) {
+      console.error('Error fetching available times:', err);
+      setAvailableTimes(['09:00 AM', '10:00 AM', '11:00 AM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM']);
+    }
   };
 
-  const availableDates = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() + i);
+  const handleBooking = async () => {
+    console.log('Auth object:', auth);
+    console.log('Auth token:', auth?.token);
+    
+    if (!auth?.token) {
+      setError('Please login first');
+      return;
+    }
+
+    if (!selectedDate || !selectedTime) {
+      setError('Please select date and time');
+      return;
+    }
+
+    const price = providerData?.price ? parseFloat(providerData.price) : 500;
+    const totalAmount = price * quantity;
+    
+    const details = {
+      providerId: providerData.id,
+      providerName: providerData.name,
+      service: providerData.service,
+      date: selectedDate,
+      time: selectedTime,
+      quantity: quantity,
+      totalAmount: totalAmount
+    };
+
+    setBookingDetails(details);
+    setShowPayment(true);
+    setError('');
+  };
+
+  // const handlePayment = async (e) => {
+
+  //   e.preventDefault();
+    
+  //   if (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+  //     setError('Please fill in all card details');
+  //     return;
+  //   }
+
+  //   try {
+  //     setPaymentLoading(true);
+  //     setError('');
+
+  //     const authToken = auth?.token;
+  //     if (!authToken) {
+  //       throw new Error('Authentication token not found. Please login again.');
+  //     }
+
+  //     // Send booking to backend
+  //     const response = await fetch('http://localhost:3000/api/bookings', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': `Bearer ${authToken}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         ...bookingDetails,
+  //         paymentMethod: 'card',
+  //         cardLast4: cardDetails.number.slice(-4),
+  //         paymentStatus: 'completed'
+  //       })
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.message || 'Booking failed');
+  //     }
+
+  //     const data = await response.json();
+  //     setBookingId(data.bookingId || `BK${Date.now().toString().slice(-8)}`);
+      
+  //     // Clear payment form and show confirmation
+  //     setShowPayment(false);
+  //     setCardDetails({ number: '', expiry: '', cvv: '' });
+  //     setShowConfirmation(true);
+
+  //     // Auto redirect after 4 seconds
+  //     setTimeout(() => {
+  //       setShowConfirmation(false);
+  //       onBack?.();
+  //     }, 4000);
+  //   } catch (err) {
+  //     console.error('Payment error:', err);
+  //     setError(err.message || 'Payment failed. Please try again.');
+  //     setPaymentLoading(false);
+  //   }
+  // };
+
+
+//    const handlePayment = async (e) => {
+//   e.preventDefault();
+  
+//   if (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+//     setError('Please fill in all card details');
+//     return;
+//   }
+
+//   try {
+//     setPaymentLoading(true);
+//     setError('');
+
+//     const authToken = auth?.token;
+//     const userId = auth?.user?.id;
+
+//     if (!authToken) {
+//       throw new Error('Authentication token not found. Please login again.');
+//     }
+
+//     if (!userId) {
+//       throw new Error('User information not found. Please login again.');
+//     }
+
+//     // Build complete booking payload with all fetched provider data
+//     const bookingPayload = {
+//       // User info
+//       userId: userId,
+      
+//       // Provider info (from fetched providerData)
+//       providerId: providerData?.id,
+//       providerName: providerData?.name,
+      
+//       // Booking details
+//       service: providerData?.service,
+//       date: selectedDate,
+//       time: selectedTime,
+//       quantity: quantity,
+//       totalAmount: bookingDetails?.totalAmount || (providerData?.price * quantity),
+      
+//       // Status
+//       status: 'confirmed',
+      
+//       // Payment info
+//       paymentMethod: 'card',
+//       cardLast4: cardDetails.number.slice(-4),
+//       paymentStatus: 'completed',
+      
+//       // Optional fields
+//       notes: '',
+//       location: providerData?.location,
+//       serviceCategory: providerData?.service
+//     };
+
+//     console.log('Booking Payload:', bookingPayload); // Debug log
+
+//     // Send booking to backend
+//     const response = await fetch('http://localhost:3000/api/bookings', {
+//       method: 'POST',
+//       headers: {
+//         'Authorization': `Bearer ${authToken}`,
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(bookingPayload)
+//     });
+
+//     if (!response.ok) {
+//       const errorData = await response.json();
+//       console.error('Backend Error:', errorData); // Debug log
+//       throw new Error(errorData.message || 'Booking failed');
+//     }
+
+//     const data = await response.json();
+//     setBookingId(data.bookingId || `BK${Date.now().toString().slice(-8)}`);
+    
+//     // Clear payment form and show confirmation
+//     setShowPayment(false);
+//     setCardDetails({ number: '', expiry: '', cvv: '' });
+//     setShowConfirmation(true);
+
+//     // Auto redirect after 4 seconds
+//     setTimeout(() => {
+//       setShowConfirmation(false);
+//       onBack?.();
+//     }, 4000);
+//   } catch (err) {
+//     console.error('Payment error:', err);
+//     setError(err.message || 'Payment failed. Please try again.');
+//     setPaymentLoading(false);
+//   }
+// };
+  
+
+//  const handlePayment = async (e) => {
+//   e.preventDefault();
+  
+//   if (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+//     setError('Please fill in all card details');
+//     return;
+//   }
+
+//   try {
+//     setPaymentLoading(true);
+//     setError('');
+
+//     const authToken = auth?.token;
+//     const userId = auth?.user?.id;
+
+//     if (!authToken) {
+//       throw new Error('Authentication token not found. Please login again.');
+//     }
+
+//     // Start with minimal required fields
+//     const bookingPayload = {
+//       userId: userId,
+//       providerId: providerData?.id,
+//       date: selectedDate,
+//       time: selectedTime,
+//       quantity: quantity,
+//       totalAmount: providerData?.price * quantity,
+//       paymentStatus: 'completed'
+//     };
+
+//     console.log('=== DIAGNOSTIC: Sending Minimal Payload ===');
+//     console.log('Provider Data Available:', {
+//       id: providerData?.id,
+//       name: providerData?.name,
+//       service: providerData?.service,
+//       price: providerData?.price,
+//       location: providerData?.location
+//     });
+//     console.log('Booking Payload:', bookingPayload);
+//     console.log('Auth User:', auth?.user);
+
+//     // Send booking to backend
+//     const response = await fetch('http://localhost:3000/api/bookings', {
+//       method: 'POST',
+//       headers: {
+//         'Authorization': `Bearer ${authToken}`,
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(bookingPayload)
+//     });
+
+//     const responseData = await response.json();
+//     console.log('Backend Response:', responseData);
+
+//     if (!response.ok) {
+//       throw new Error(responseData.message || 'Booking failed');
+//     }
+
+//     setBookingId(responseData.bookingId || `BK${Date.now().toString().slice(-8)}`);
+    
+//     // Clear payment form and show confirmation
+//     setShowPayment(false);
+//     setCardDetails({ number: '', expiry: '', cvv: '' });
+//     setShowConfirmation(true);
+
+//     // Auto redirect after 4 seconds
+//     setTimeout(() => {
+//       setShowConfirmation(false);
+//       onBack?.();
+//     }, 4000);
+//   } catch (err) {
+//     console.error('Payment error:', err);
+//     setError(err.message || 'Payment failed. Please try again.');
+//     setPaymentLoading(false);
+//   }
+// };
+// const handlePayment = async (e) => {
+//   e.preventDefault();
+  
+//   if (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+//     setError('Please fill in all card details');
+//     return;
+//   }
+
+//   try {
+//     setPaymentLoading(true);
+//     setError('');
+
+//     // Debug auth state
+//     console.log('=== AUTH DEBUG ===');
+//     console.log('Auth object:', auth);
+//     console.log('Token:', auth?.token);
+//     console.log('User:', auth?.user);
+//     console.log('isLoggedIn:', auth?.isLoggedIn?.());
+
+//     // Get token and user from auth context
+//     const authToken = auth?.token;
+//     const userId = auth?.user?.id;
+
+//     // Validate authentication
+//     if (!authToken) {
+//       console.error('❌ No token in auth context');
+//       throw new Error('Not authenticated. Please log in again.');
+//     }
+
+//     if (!userId) {
+//       console.error('❌ No user ID in auth context');
+//       throw new Error('User information missing. Please log in again.');
+//     }
+
+//     if (!selectedDate || !selectedTime) {
+//       throw new Error('Please select date and time');
+//     }
+
+//     // Validate provider data
+//     if (!providerData?.id) {
+//       throw new Error('Provider information missing');
+//     }
+
+//     // Build booking payload
+//     const bookingPayload = {
+//       userId: userId,
+//       providerId: providerData.id,
+//       date: selectedDate,
+//       time: selectedTime,
+//       quantity: quantity,
+//       totalAmount: providerData.price * quantity,
+//       paymentStatus: 'completed',
+//       paymentMethod: 'card',
+//       cardLast4: cardDetails.number.slice(-4)
+//     };
+
+//     console.log('=== SENDING BOOKING ===');
+//     console.log('Payload:', bookingPayload);
+//     console.log('Token (first 20 chars):', authToken.substring(0, 20) + '...');
+
+//     // Send booking to backend
+//     const response = await fetch('http://localhost:3000/api/bookings', {
+//       method: 'POST',
+//       headers: {
+//         'Authorization': `Bearer ${authToken}`,
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(bookingPayload)
+//     });
+
+//     console.log('Response status:', response.status);
+//     const responseData = await response.json();
+//     console.log('Backend Response:', responseData);
+
+//     if (!response.ok) {
+//       throw new Error(responseData.message || `Booking failed with status ${response.status}`);
+//     }
+
+//     console.log('✅ Booking successful!');
+//     setBookingId(responseData.bookingId || `BK${Date.now().toString().slice(-8)}`);
+    
+//     // Clear payment form and show confirmation
+//     setShowPayment(false);
+//     setCardDetails({ number: '', expiry: '', cvv: '' });
+//     setShowConfirmation(true);
+
+//     // Auto redirect after 4 seconds
+//     setTimeout(() => {
+//       setShowConfirmation(false);
+//       onBack?.();
+//     }, 4000);
+//   } catch (err) {
+//     console.error('❌ Payment error:', err);
+//     setError(err.message || 'Payment failed. Please try again.');
+//     setPaymentLoading(false);
+//   }
+// };
+
+
+
+//    const handlePayment = async (e) => {
+//   e.preventDefault();
+  
+//   if (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+//     setError('Please fill in all card details');
+//     return;
+//   }
+
+//   try {
+//     setPaymentLoading(true);
+//     setError('');
+
+//     // Debug auth state
+//     console.log('=== AUTH DEBUG ===');
+//     console.log('Auth object:', auth);
+//     console.log('Token:', auth?.token);
+//     console.log('User:', auth?.user);
+//     console.log('isLoggedIn:', auth?.isLoggedIn?.());
+
+//     // Get token and user from auth context
+//     const authToken = auth?.token;
+//     const userId = auth?.user?.id;
+
+//     // Validate authentication
+//     if (!authToken) {
+//       console.error('❌ No token in auth context');
+//       throw new Error('Not authenticated. Please log in again.');
+//     }
+
+//     if (!userId) {
+//       console.error('❌ No user ID in auth context');
+//       throw new Error('User information missing. Please log in again.');
+//     }
+
+//     if (!selectedDate || !selectedTime) {
+//       throw new Error('Please select date and time');
+//     }
+
+//     // Validate provider data
+//     if (!providerData?.id) {
+//       throw new Error('Provider information missing');
+//     }
+
+//     // Build booking payload - backend expects bookingDetails object
+//     const bookingPayload = {
+//       bookingDetails: {
+//         userId: userId,
+//         providerId: providerData.id,
+//         providerName: providerData.name,
+//         service: providerData.service,
+//         date: selectedDate,
+//         time: selectedTime,
+//         quantity: quantity,
+//         totalAmount: providerData.price * quantity
+//       },
+//       paymentMethod: 'card',
+//       cardLast4: cardDetails.number.slice(-4),
+//       paymentStatus: 'completed'
+//     };
+
+//     console.log('=== SENDING BOOKING ===');
+//     console.log('Payload:', bookingPayload);
+//     console.log('Token (first 20 chars):', authToken.substring(0, 20) + '...');
+
+//     // Send booking to backend
+//     const response = await fetch('http://localhost:3000/api/bookings', {
+//       method: 'POST',
+//       headers: {
+//         'Authorization': `Bearer ${authToken}`,
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(bookingPayload)
+//     });
+
+//     console.log('Response status:', response.status);
+//     const responseData = await response.json();
+//     console.log('Backend Response:', responseData);
+
+//     if (!response.ok) {
+//       throw new Error(responseData.message || `Booking failed with status ${response.status}`);
+//     }
+
+//     console.log('✅ Booking successful!');
+//     setBookingId(responseData.bookingId || `BK${Date.now().toString().slice(-8)}`);
+    
+//     // Clear payment form and show confirmation
+//     setShowPayment(false);
+//     setCardDetails({ number: '', expiry: '', cvv: '' });
+//     setShowConfirmation(true);
+
+//     // Auto redirect after 4 seconds
+//     setTimeout(() => {
+//       setShowConfirmation(false);
+//       onBack?.();
+//     }, 4000);
+//   } catch (err) {
+//     console.error('❌ Payment error:', err);
+//     setError(err.message || 'Payment failed. Please try again.');
+//     setPaymentLoading(false);
+//   }
+// };
+
+
+// const handlePayment = async (e) => {
+//   e.preventDefault();
+  
+//   if (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+//     setError('Please fill in all card details');
+//     return;
+//   }
+
+//   try {
+//     setPaymentLoading(true);
+//     setError('');
+
+//     // Debug auth state
+//     console.log('=== AUTH DEBUG ===');
+//     console.log('Auth object:', auth);
+//     console.log('Token:', auth?.token);
+//     console.log('User:', auth?.user);
+//     console.log('isLoggedIn:', auth?.isLoggedIn?.());
+
+//     // Get token and user from auth context
+//     const authToken = auth?.token;
+//     const userId = auth?.user?.id;
+
+//     // Validate authentication
+//     if (!authToken) {
+//       console.error('❌ No token in auth context');
+//       throw new Error('Not authenticated. Please log in again.');
+//     }
+
+//     if (!userId) {
+//       console.error('❌ No user ID in auth context');
+//       throw new Error('User information missing. Please log in again.');
+//     }
+
+//     if (!selectedDate || !selectedTime) {
+//       throw new Error('Please select date and time');
+//     }
+
+//     // Validate provider data
+//     if (!providerData?.id) {
+//       throw new Error('Provider information missing');
+//     }
+
+//     // Build booking payload - backend expects bookingDetails object
+//     const bookingPayload = {
+//       bookingDetails: {
+//         userId: userId,
+//         providerId: providerData.id,
+//         providerName: providerData.name,
+//         service: providerData.service,
+//         date: selectedDate,
+//         time: selectedTime,
+//         quantity: quantity,
+//         totalAmount: providerData.price * quantity
+//       },
+//       paymentMethod: 'card',
+//       cardLast4: cardDetails.number.slice(-4),
+//       paymentStatus: 'completed'
+//     };
+
+//     console.log('=== SENDING BOOKING ===');
+//     console.log('Payload:', bookingPayload);
+//     console.log('Auth Token:', authToken.substring(0, 20) + '...');
+//     console.log('User ID:', userId);
+
+//     // Send booking to backend with required headers
+//     const response = await fetch('http://localhost:3000/api/bookings', {
+//       method: 'POST',
+//       headers: {
+//         'Authorization': `Bearer ${authToken}`,
+//         'Content-Type': 'application/json',
+//         'x-user-id': userId  // ✅ REQUIRED by backend
+//       },
+//       body: JSON.stringify(bookingPayload)
+//     });
+
+//     console.log('Response status:', response.status);
+//     const responseData = await response.json();
+//     console.log('Backend Response:', responseData);
+
+//     if (!response.ok) {
+//       throw new Error(responseData.message || `Booking failed with status ${response.status}`);
+//     }
+
+//     console.log('✅ Booking successful!');
+//     setBookingId(responseData.bookingId || `BK${Date.now().toString().slice(-8)}`);
+    
+//     // Clear payment form and show confirmation
+//     setShowPayment(false);
+//     setCardDetails({ number: '', expiry: '', cvv: '' });
+//     setShowConfirmation(true);
+
+//     // Auto redirect after 4 seconds
+//     setTimeout(() => {
+//       setShowConfirmation(false);
+//       onBack?.();
+//     }, 4000);
+//   } catch (err) {
+//     console.error('❌ Payment error:', err);
+//     setError(err.message || 'Payment failed. Please try again.');
+//     setPaymentLoading(false);
+//   }
+// };
+  
+   const handlePayment = async (e) => {
+  e.preventDefault();
+  
+  if (!cardDetails.number || !cardDetails.expiry || !cardDetails.cvv) {
+    setError('Please fill in all card details');
+    return;
+  }
+
+  try {
+    setPaymentLoading(true);
+    setError('');
+
+    // Debug auth state
+    console.log('=== AUTH DEBUG ===');
+    console.log('Auth object:', auth);
+    console.log('Token:', auth?.token);
+    console.log('User:', auth?.user);
+    console.log('isLoggedIn:', auth?.isLoggedIn?.());
+
+    // Get token and user from auth context
+    const authToken = auth?.token;
+    const userId = auth?.user?.id;
+
+    // Validate authentication
+    if (!authToken) {
+      console.error('❌ No token in auth context');
+      throw new Error('Not authenticated. Please log in again.');
+    }
+
+    if (!userId) {
+      console.error('❌ No user ID in auth context');
+      throw new Error('User information missing. Please log in again.');
+    }
+
+    if (!selectedDate || !selectedTime) {
+      throw new Error('Please select date and time');
+    }
+
+    // Validate provider data
+    if (!providerData?.id) {
+      throw new Error('Provider information missing');
+    }
+
+    // Build booking payload - backend expects bookingDetails object
+    const bookingPayload = {
+      bookingDetails: {
+        userId: userId,
+        providerId: providerData.id,
+        providerName: providerData.name,
+        service: providerData.service,
+        date: selectedDate,
+        time: selectedTime,
+        quantity: quantity,
+        totalAmount: providerData.price * quantity
+      },
+      paymentMethod: 'card',
+      cardLast4: cardDetails.number.slice(-4),
+      paymentStatus: 'completed'
+    };
+
+    console.log('=== SENDING BOOKING ===');
+    console.log('Payload:', bookingPayload);
+    console.log('Auth Token:', authToken.substring(0, 20) + '...');
+    console.log('User ID:', userId);
+
+    // Send booking to backend - token is in Authorization header
+    const response = await fetch('http://localhost:3000/api/bookings', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(bookingPayload)
+    });
+
+    console.log('Response status:', response.status);
+    const responseData = await response.json();
+    console.log('Backend Response:', responseData);
+
+    if (!response.ok) {
+      throw new Error(responseData.message || `Booking failed with status ${response.status}`);
+    }
+
+    console.log('✅ Booking successful!');
+    setBookingId(responseData.bookingId || `BK${Date.now().toString().slice(-8)}`);
+    
+    // Clear payment form and show confirmation
+    setShowPayment(false);
+    setCardDetails({ number: '', expiry: '', cvv: '' });
+    setShowConfirmation(true);
+
+    // Auto redirect after 4 seconds
+    setTimeout(() => {
+      setShowConfirmation(false);
+      onBack?.();
+    }, 4000);
+  } catch (err) {
+    console.error('❌ Payment error:', err);
+    setError(err.message || 'Payment failed. Please try again.');
+    setPaymentLoading(false);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const getDaysInMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const generateCalendarDays = () => {
+    const daysInMonth = getDaysInMonth(calendarMonth);
+    const firstDay = getFirstDayOfMonth(calendarMonth);
+    const days = [];
+
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(i);
+    }
+
+    return days;
+  };
+
+  const isDateDisabled = (day) => {
+    if (!day) return true;
+    const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+
+  const getDateString = (day) => {
+    const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
     return date.toISOString().split('T')[0];
-  });
+  };
 
-  if (showConfirmation) {
+  const handlePrevMonth = () => {
+    setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1));
+  };
+
+  const handleNextMonth = () => {
+    setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1));
+  };
+
+  const monthName = calendarMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const calendarDays = generateCalendarDays();
+
+  // LOADING STATE
+  if (loading && !providerData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <style>{`
-          @keyframes scaleIn {
-            from {
-              transform: scale(0.8);
-              opacity: 0;
-            }
-            to {
-              transform: scale(1);
-              opacity: 1;
-            }
-          }
-          @keyframes slideOut {
-            from {
-              transform: scale(1);
-              opacity: 1;
-            }
-            to {
-              transform: scale(0.8);
-              opacity: 0;
-            }
-          }
-          .animate-scale-in {
-            animation: scaleIn 0.4s ease-out;
-          }
-          .animate-scale-out {
-            animation: slideOut 0.4s ease-in forwards;
-          }
-        `}</style>
-        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center space-y-6 animate-scale-in">
-          <div className="text-6xl animate-bounce">✓</div>
-          <h2 className="text-2xl font-bold text-gray-900">Booking Confirmed!</h2>
-          
-          <div className="bg-blue-50 rounded-xl p-6 text-left space-y-4">
-            <div>
-              <p className="text-sm text-gray-600">Provider</p>
-              <p className="text-lg font-semibold text-gray-900">{providerData.name}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Service</p>
-              <p className="text-lg font-semibold text-gray-900">{providerData.service}</p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">Date</p>
-                <p className="text-lg font-semibold text-gray-900">{selectedDate}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Time</p>
-                <p className="text-lg font-semibold text-gray-900">{selectedTime}</p>
-              </div>
-            </div>
-            <div className="border-t border-blue-200 pt-4">
-              <p className="text-sm text-gray-600 mb-2">Total Amount</p>
-              <p className="text-2xl font-bold text-blue-600">₹{providerData.price * quantity}</p>
-            </div>
-          </div>
-
-          <p className="text-gray-600 text-sm">Redirecting in 2 seconds...</p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <p className="mt-4 text-gray-600">Loading provider details...</p>
         </div>
       </div>
     );
   }
 
+  // ERROR STATE
+  if (!providerData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-md p-8 text-center max-w-md">
+          <p className="text-red-600 font-semibold mb-4">{error || 'Failed to load provider'}</p>
+          <button
+            onClick={onBack}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // PAYMENT MODAL
+  if (showPayment) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+          <button
+            onClick={() => setShowPayment(false)}
+            className="mb-6 p-2 hover:bg-gray-100 rounded-lg transition"
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Details</h2>
+          <p className="text-gray-600 mb-6">Complete your booking by adding payment information</p>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <p className="text-red-600 text-sm">{error}</p>
+            </div>
+          )}
+
+          <div className="bg-blue-50 rounded-xl p-4 mb-6">
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Provider</span>
+                <span className="font-semibold text-gray-900">{bookingDetails?.providerName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Date & Time</span>
+                <span className="font-semibold text-gray-900">{new Date(bookingDetails?.date).toLocaleDateString()} {bookingDetails?.time}</span>
+              </div>
+              <div className="border-t border-blue-200 pt-3 flex justify-between">
+                <span className="font-bold text-gray-900">Total Amount</span>
+                <span className="text-xl font-bold text-blue-600">₹{bookingDetails?.totalAmount}</span>
+              </div>
+            </div>
+          </div>
+
+          <form onSubmit={handlePayment} className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">Card Number</label>
+              <input
+                type="text"
+                placeholder="1234 5678 9012 3456"
+                value={cardDetails.number}
+                onChange={(e) => {
+                  let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+                  let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+                  setCardDetails({ ...cardDetails, number: formatted });
+                }}
+                maxLength="19"
+                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">Expiry</label>
+                <input
+                  type="text"
+                  placeholder="MM/YY"
+                  value={cardDetails.expiry}
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/[^0-9]/g, '');
+                    if (value.length >= 2) {
+                      value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                    }
+                    setCardDetails({ ...cardDetails, expiry: value });
+                  }}
+                  maxLength="5"
+                  className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">CVV</label>
+                <input
+                  type="text"
+                  placeholder="123"
+                  value={cardDetails.cvv}
+                  onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value.replace(/[^0-9]/g, '') })}
+                  maxLength="4"
+                  className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={paymentLoading}
+              className={`w-full py-3 px-4 rounded-lg font-bold text-white transition mt-6 ${
+                paymentLoading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+              }`}
+            >
+              {paymentLoading ? 'Processing...' : `Pay ₹${bookingDetails?.totalAmount}`}
+            </button>
+
+            <p className="text-xs text-gray-600 text-center mt-4">
+              💳 Dummy payment for demo purposes only
+            </p>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // CONFIRMATION SCREEN
+  if (showConfirmation) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <style>{`
+          @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+          }
+          @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+          }
+          .animate-scale-in { animation: scaleIn 0.4s ease-out; }
+          .animate-slide-down { animation: slideDown 0.5s ease-out; }
+        `}</style>
+        
+        <div className="w-full max-w-md space-y-4 animate-scale-in">
+          <div className="text-center mb-6">
+            <div className="inline-block relative">
+              <div className="absolute inset-0 bg-green-400 rounded-full opacity-25 animate-pulse"></div>
+              <div className="relative bg-green-500 rounded-full p-4">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden animate-slide-down">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 px-8 py-6">
+              <h2 className="text-2xl font-bold text-white">Booking Confirmed!</h2>
+              <p className="text-green-100 mt-1">Your appointment is secured</p>
+            </div>
+
+            <div className="p-8 space-y-6">
+              <div className="flex items-start gap-4">
+                <img
+                  src={providerData.dp}
+                  alt={providerData.name}
+                  className="w-16 h-16 rounded-full border-4 border-green-100"
+                />
+                <div>
+                  <p className="text-sm text-gray-600">Service Provider</p>
+                  <h3 className="text-xl font-bold text-gray-900">{providerData.name}</h3>
+                  <p className="text-blue-600 font-semibold text-sm capitalize">{providerData.service}</p>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 pt-6 space-y-4">
+                <div>
+                  <p className="text-xs text-gray-600 mb-1">📅 Date & Time</p>
+                  <p className="font-bold text-gray-900">{new Date(bookingDetails?.date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  <p className="font-semibold text-blue-600">{bookingDetails?.time}</p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-600 mb-1">📍 Location</p>
+                  <p className="font-semibold text-gray-900">{providerData.location}</p>
+                </div>
+
+                <div className="bg-green-50 rounded-xl p-4 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Number of Services</span>
+                    <span className="font-semibold text-gray-900">{bookingDetails?.quantity}x</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Price per service</span>
+                    <span className="font-semibold text-gray-900">₹{providerData.price}</span>
+                  </div>
+                  <div className="border-t border-green-200 pt-3 flex justify-between items-center">
+                    <span className="font-bold text-gray-900">Total Paid</span>
+                    <span className="text-2xl font-bold text-green-600">₹{bookingDetails?.totalAmount}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-lg p-3">
+                <p className="text-xs text-gray-600">Booking Reference</p>
+                <p className="font-bold text-gray-900 text-sm">#{bookingId}</p>
+              </div>
+
+              <div className="space-y-2 bg-blue-50 rounded-lg p-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">📞</span>
+                  <span className="text-sm text-gray-700"><strong>Provider will contact you</strong> to confirm details</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">📧</span>
+                  <span className="text-sm text-gray-700"><strong>Confirmation email sent</strong> to your registered email</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 px-8 py-4 border-t border-gray-200">
+              <p className="text-xs text-gray-600 text-center">
+                Redirecting to home in 4 seconds...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // MAIN BOOKING PAGE
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-4">
           <button
@@ -144,18 +1781,14 @@ export default function ProviderBooking({ provider, onBack }) {
 
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Left Side - Provider Details */}
+          {/* LEFT COLUMN - Provider Info */}
           <div className="lg:col-span-2 space-y-6">
-            
             {/* Provider Header Card */}
             <div className="bg-white rounded-2xl shadow-md overflow-hidden">
-              {/* Cover Image */}
               <div className="h-64 bg-gradient-to-r from-blue-400 to-blue-600 relative overflow-hidden">
                 <img src={providerData.coverImage} alt={providerData.name} className="w-full h-full object-cover opacity-70" />
               </div>
 
-              {/* Provider Info */}
               <div className="p-8 -mt-16 relative">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
@@ -166,14 +1799,13 @@ export default function ProviderBooking({ provider, onBack }) {
                   
                   <div className="flex-grow">
                     <h2 className="text-3xl font-bold text-gray-900">{providerData.name}</h2>
-                    <p className="text-lg text-blue-600 font-semibold mt-1">{providerData.service}</p>
+                    <p className="text-lg text-blue-600 font-semibold mt-1 capitalize">{providerData.service}</p>
 
-                    {/* Rating and Stats */}
                     <div className="flex items-center gap-4 mt-4">
                       <div className="flex items-center gap-2">
                         <div className="flex">
                           {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={18} className="fill-yellow-400 text-yellow-400" />
+                            <Star key={i} size={18} className={i < Math.floor(providerData.rating) ? "fill-yellow-400 text-yellow-400" : "fill-gray-300 text-gray-300"} />
                           ))}
                         </div>
                         <span className="font-bold text-gray-900">{providerData.rating}</span>
@@ -181,7 +1813,6 @@ export default function ProviderBooking({ provider, onBack }) {
                       </div>
                     </div>
 
-                    {/* Quick Stats */}
                     <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
                       <div>
                         <p className="text-sm text-gray-600">Experience</p>
@@ -208,20 +1839,20 @@ export default function ProviderBooking({ provider, onBack }) {
               <p className="text-gray-600 italic">{providerData.aboutMe}</p>
             </div>
 
-            {/* Services Offered */}
+            {/* Services Section */}
             <div className="bg-white rounded-2xl shadow-md p-8 space-y-4">
               <h3 className="text-xl font-bold text-gray-900">Services Offered</h3>
               <div className="grid grid-cols-2 gap-3">
-                {providerData.services.map((service, idx) => (
+                {providerData.services?.map((service, idx) => (
                   <div key={idx} className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
                     <span className="text-lg">✓</span>
-                    <span className="text-gray-900 font-medium">{service}</span>
+                    <span className="text-gray-900 font-medium capitalize">{service}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Contact Info */}
+            {/* Contact Section */}
             <div className="bg-white rounded-2xl shadow-md p-8 space-y-4">
               <h3 className="text-xl font-bold text-gray-900">Contact & Location</h3>
               <div className="space-y-3">
@@ -241,55 +1872,126 @@ export default function ProviderBooking({ provider, onBack }) {
             </div>
           </div>
 
-          {/* Right Side - Booking Form */}
+          {/* RIGHT COLUMN - Booking Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-md p-6 sticky top-24 space-y-6">
               
-              {/* Price */}
+              {/* Price Section */}
               <div className="border-b border-gray-200 pb-4">
                 <p className="text-sm text-gray-600 mb-2">Price per service</p>
                 <p className="text-3xl font-bold text-gray-900">₹{providerData.price}</p>
                 <p className="text-xs text-gray-500 mt-1">up to ₹{providerData.maxPrice}</p>
               </div>
 
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <p className="text-red-600 text-sm">{error}</p>
+                </div>
+              )}
+
               {/* Date Selection */}
-              <div className="space-y-3">
+              <div className="space-y-3 relative">
                 <label className="block font-semibold text-gray-900">Select Date</label>
-                <select
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
-                >
-                  <option value="">Choose a date</option>
-                  {availableDates.map(date => (
-                    <option key={date} value={date}>{new Date(date).toLocaleDateString()}</option>
-                  ))}
-                </select>
+                
+                <div className="relative">
+                  <button
+                    onClick={() => setShowCalendarDropdown(!showCalendarDropdown)}
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-left font-medium text-gray-900 hover:border-blue-300 transition flex items-center justify-between bg-white"
+                  >
+                    <span>{selectedDate ? new Date(selectedDate).toLocaleDateString() : 'Choose a date'}</span>
+                    <ChevronRight size={20} className={`transition ${showCalendarDropdown ? 'rotate-90' : ''}`} />
+                  </button>
+
+                  {showCalendarDropdown && (
+                    <div className="absolute top-full left-0 mt-2 bg-white border-2 border-gray-300 rounded-lg p-3 shadow-lg z-50 w-full">
+                      <div className="flex items-center justify-between mb-3">
+                        <button
+                          onClick={handlePrevMonth}
+                          className="p-1 hover:bg-gray-100 rounded transition"
+                        >
+                          <ChevronLeft size={18} />
+                        </button>
+                        <h4 className="text-sm font-semibold text-gray-900">{monthName}</h4>
+                        <button
+                          onClick={handleNextMonth}
+                          className="p-1 hover:bg-gray-100 rounded transition"
+                        >
+                          <ChevronRight size={18} />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-7 gap-1 mb-2">
+                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, idx) => (
+                          <div key={`day-${idx}`} className="text-center text-xs font-bold text-gray-600 py-1">
+                            {day.substring(0, 1)}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="grid grid-cols-7 gap-1">
+                        {calendarDays.map((day, idx) => {
+                          const disabled = isDateDisabled(day);
+                          const dateStr = day ? getDateString(day) : '';
+                          const isSelected = dateStr === selectedDate;
+
+                          return (
+                            <button
+                              key={idx}
+                              onClick={() => {
+                                if (!disabled) {
+                                  setSelectedDate(dateStr);
+                                  setShowCalendarDropdown(false);
+                                }
+                              }}
+                              disabled={disabled}
+                              className={`w-full py-1 rounded text-xs font-medium transition ${
+                                !day
+                                  ? 'invisible'
+                                  : disabled
+                                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                  : isSelected
+                                  ? 'bg-blue-600 text-white'
+                                  : 'text-gray-700 hover:bg-blue-100'
+                              }`}
+                            >
+                              {day}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Time Selection */}
               {selectedDate && (
                 <div className="space-y-3">
                   <label className="block font-semibold text-gray-900">Select Time</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {providerData.availableTimes.map(time => (
-                      <button
-                        key={time}
-                        onClick={() => setSelectedTime(time)}
-                        className={`py-2 px-3 rounded-lg font-medium transition ${
-                          selectedTime === time
-                            ? 'bg-blue-600 text-white'
-                            : 'border-2 border-gray-300 text-gray-700 hover:border-blue-300'
-                        }`}
-                      >
-                        {time}
-                      </button>
-                    ))}
-                  </div>
+                  {availableTimes.length > 0 ? (
+                    <div className="grid grid-cols-2 gap-2">
+                      {availableTimes.map(time => (
+                        <button
+                          key={time}
+                          onClick={() => setSelectedTime(time)}
+                          className={`py-2 px-3 rounded-lg font-medium transition text-sm ${
+                            selectedTime === time
+                              ? 'bg-blue-600 text-white'
+                              : 'border-2 border-gray-300 text-gray-700 hover:border-blue-300'
+                          }`}
+                        >
+                          {time}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-600 text-sm">No available times for this date</p>
+                  )}
                 </div>
               )}
 
-              {/* Quantity */}
+              {/* Quantity Selection */}
               {selectedTime && (
                 <div className="space-y-3">
                   <label className="block font-semibold text-gray-900">Number of Services</label>
@@ -311,7 +2013,7 @@ export default function ProviderBooking({ provider, onBack }) {
                 </div>
               )}
 
-              {/* Total */}
+              {/* Price Breakdown */}
               {selectedTime && (
                 <div className="border-t border-gray-200 pt-4 space-y-4">
                   <div className="flex justify-between items-center">
@@ -339,14 +2041,14 @@ export default function ProviderBooking({ provider, onBack }) {
                     : 'bg-gray-400 cursor-not-allowed'
                 }`}
               >
-                Book Now
+                Proceed to Payment
               </button>
 
               {/* Policies */}
               <div className="bg-blue-50 rounded-lg p-4 space-y-2 text-xs text-gray-700">
-                <p><strong>✓ {providerData.policies.cancellation}</strong></p>
-                <p><strong>✓ {providerData.policies.rescheduling}</strong></p>
-                <p><strong>✓ {providerData.policies.guarantee}</strong></p>
+                <p><strong>✓ {providerData.policies?.cancellation}</strong></p>
+                <p><strong>✓ {providerData.policies?.rescheduling}</strong></p>
+                <p><strong>✓ {providerData.policies?.guarantee}</strong></p>
               </div>
             </div>
           </div>
@@ -355,3 +2057,36 @@ export default function ProviderBooking({ provider, onBack }) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

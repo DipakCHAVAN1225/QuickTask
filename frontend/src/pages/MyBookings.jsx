@@ -182,7 +182,7 @@ export default function ProviderDashboard() {
   );
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-4/5 bg-gray-100">
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transition-transform duration-300`}>
         <div className="p-6 border-b">

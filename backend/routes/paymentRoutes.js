@@ -1,0 +1,96 @@
+// routes/paymentRoutes.js
+const express = require('express');
+const router = express.Router();
+
+// Middleware to verify JWT token
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || 'change-this-secret-key';
+
+const verifyToken = (req, res, next) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'No token provided' 
+      });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = { id: decoded.userId };
+    next();
+  } catch (error) {
+    res.status(401).json({ 
+      success: false,
+      message: 'Invalid token' 
+    });
+  }
+};
+
+// Dummy payment endpoint for testing
+router.post("/dummy-pay", async (req, res) => {
+  try {
+    const { amount, paymentMethod } = req.body;
+
+    if (!amount) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Amount is required' 
+      });
+    }
+
+    console.log('💳 Processing dummy payment:', {
+      amount,
+      paymentMethod,
+      timestamp: new Date().toISOString()
+    });
+
+    // Simulate payment processing
+    setTimeout(() => {
+      res.json({
+        success: true,
+        message: 'Payment processed successfully',
+        transactionId: `TXN${Date.now()}`,
+        amount,
+        paymentMethod
+      });
+    }, 1000);
+  } catch (error) {
+    console.error('Payment error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+});
+
+// Verify payment endpoint
+router.post("/verify", verifyToken, async (req, res) => {
+  try {
+    const { transactionId } = req.body;
+
+    if (!transactionId) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Transaction ID is required' 
+      });
+    }
+
+    console.log('✅ Verifying payment:', transactionId);
+
+    res.json({
+      success: true,
+      message: 'Payment verified',
+      transactionId,
+      status: 'completed'
+    });
+  } catch (error) {
+    console.error('Verification error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+});
+
+module.exports = router;

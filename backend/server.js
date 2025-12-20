@@ -1,5 +1,4 @@
 
-
 ////////////////////////////
 // backend/server.js
 // Load environment variables from .env file
@@ -10,8 +9,16 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+// const bookingRoutes = require('./routes/BookingRoutes');
 const app = express();
+
+
+
+
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 // ============ CONFIGURATION ============
 const PORT = process.env.PORT || 3000;
@@ -26,6 +33,12 @@ console.log(`   Port: ${PORT}`);
 console.log(`   MongoDB: ${MONGODB_URI.split('@')[1] || MONGODB_URI}`);
 console.log(`   CORS Origin: ${CORS_ORIGIN}`);
 console.log(`   JWT Secret: ${JWT_SECRET.substring(0, 10)}...`);
+
+
+
+
+
+
 
 // ============ MIDDLEWARE ============
 app.use(cors({
@@ -54,6 +67,31 @@ mongoose.connect(MONGODB_URI, {
   });
 
 // ============ USER SCHEMA ============
+// const userSchema = new mongoose.Schema({
+//   name: { type: String, required: true },
+//   email: { type: String, required: true, unique: true, lowercase: true },
+//   password: { type: String, required: true },
+//   role: { type: String, enum: ['user', 'provider'], required: true },
+//   phone: { type: String, default: '' },
+//   address: { type: String, default: '' },
+  
+//   // For service providers
+//   businessName: { type: String, default: '' },
+//   serviceType: { type: String, default: '' },
+//   services: [String],
+  
+//   // Profile
+//   dp: { type: String, default: '' },
+//   bio: { type: String, default: '' },
+//   rating: { type: Number, default: 0 },
+//   totalReviews: { type: Number, default: 0 },
+  
+//   createdAt: { type: Date, default: Date.now }
+// });
+
+// ============ ENHANCED USER SCHEMA ============
+// Replace your existing userSchema with this one in server.js
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
@@ -67,14 +105,42 @@ const userSchema = new mongoose.Schema({
   serviceType: { type: String, default: '' },
   services: [String],
   
+  // Pricing & Experience (NEW)
+  pricePerHour: { type: Number, default: 500 },
+  maxPrice: { type: Number, default: 1500 },
+  yearsOfExperience: { type: Number, default: 5 },
+  responseTime: { type: String, default: '15 mins' },
+  completionRate: { type: Number, default: 98 },
+  
   // Profile
   dp: { type: String, default: '' },
   bio: { type: String, default: '' },
-  rating: { type: Number, default: 0 },
+  rating: { type: Number, default: 4.5, min: 0, max: 5 },
   totalReviews: { type: Number, default: 0 },
+  languages: [String],
+  
+  // Cancellation Policy
+  cancellationPolicy: {
+    hoursBeforeCancel: { type: Number, default: 2 },
+    allowRescheduling: { type: Boolean, default: true },
+    guaranteeType: { type: String, default: '100% satisfaction guarantee' }
+  },
+  
+  // Availability
+  isAvailable: { type: Boolean, default: true },
+  workingDays: [String], // e.g., ['Monday', 'Tuesday', ...]
+  workingHours: {
+    start: { type: String, default: '09:00 AM' },
+    end: { type: String, default: '06:00 PM' }
+  },
   
   createdAt: { type: Date, default: Date.now }
 });
+
+// const User = mongoose.model('User', userSchema);
+
+
+
 
 const User = mongoose.model('User', userSchema);
 
@@ -101,7 +167,18 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
+
+
+
+const bookingsRouter = require('./routes/Bookings');
+const paymentRoutes = require("./routes/paymentRoutes");
+
 // ============ ROUTES ============
+
+app.use("/api/payment", paymentRoutes);
+app.use("/api/providers", require("./routes/Providers"))
+app.use('/api/bookings', bookingsRouter);;
+
 
 // Register
 app.post('/api/auth/register', async (req, res) => {
