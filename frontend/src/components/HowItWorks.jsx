@@ -13,7 +13,7 @@ export default function HowItWorks() {
       <div className="max-w-6xl mx-auto px-6 grid gap-8 md:grid-cols-3">
         
         {/* Card 1 */}
-        <div className="group text-center p-8 rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+        <div className="group text-center p-8 border-1 border-blue-600 rounded-2xl bg-[#FFFFFF] shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
           <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold text-lg">
             1
           </div>
@@ -27,7 +27,7 @@ export default function HowItWorks() {
         </div>
 
         {/* Card 2 */}
-        <div className="group text-center p-8 rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+        <div className="group text-center p-8    border-1 border-blue-600 rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
           <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-lg">
             2
           </div>
@@ -41,7 +41,7 @@ export default function HowItWorks() {
         </div>
 
         {/* Card 3 */}
-        <div className="group text-center p-8 rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+        <div className="group text-center    border-1 border-blue-600  p-8 rounded-2xl bg-white shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
           <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-green-500 text-white font-bold text-lg">
             3
           </div>

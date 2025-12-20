@@ -195,7 +195,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ProviderDashboard from "./pages/ProviderDashboard";
 import UserDashboard from "./pages/UserDash";
-import MyBookings from "./pages/MyBookings";
+// import MyBookings from "./pages/MyBookings";
 import MyProfile from "./pages/MyProfile";
 
 // SVG Icons
@@ -333,7 +333,7 @@ function AppRoutes() {
         path="/my-bookings"
         element={
           <ProtectedRoute requiredRole="user">
-            <MyBookings />
+            {/* <MyBookings /> */}
           </ProtectedRoute>
         }
       />
@@ -378,7 +378,7 @@ export default function App() {
     <AuthProvider>
       {/* ✅ Navbar is INSIDE AuthProvider so it can use useAuth() */}
       <Navbar />
-      <main className="min-h-screen bg-gray-50 text-gray-800">
+      <main className="min-h-screen bg-[#EDEDED] text-gray-800">
         <AppRoutes />
       </main>
     </AuthProvider>
