@@ -3,7 +3,10 @@ import { Wrench, UserCheck, CreditCard } from "lucide-react";
 
 export default function HowItWorks() {
   return (
-    <section id="how" className="bg-white/60 py-16">
+    <section
+      id="how"
+      className="py-16 bg-gradient-to-b from-white via-indigo-50/40 to-white"
+    >
       {/* Heading */}
       <div className="text-4xl text-center font-extrabold text-gray-900 mb-16">
         How It <span className="text-indigo-600">Works</span>
