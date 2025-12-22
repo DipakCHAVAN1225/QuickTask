@@ -46,9 +46,9 @@ export default function Navbar() {
           {/* Provider Navigation */}
           <nav className="hidden lg:flex gap-10 text-sm font-medium">
             <Link to="/providerdashboard" className="text-gray-700 hover:text-indigo-600 transition">Dashboard</Link>
-            <Link to="/providerbookings" className="text-gray-700 hover:text-indigo-600 transition">Bookings</Link>
+            {/* <Link to="/providerbookings" className="text-gray-700 hover:text-indigo-600 transition">bookings</Link>
             <Link to="/providerearnings" className="text-gray-700 hover:text-indigo-600 transition">Earnings</Link>
-            <Link to="/providerprofile" className="text-gray-700 hover:text-indigo-600 transition">Profile</Link>
+            <Link to="/providerprofile" className="text-gray-700 hover:text-indigo-600 transition">Profile</Link> */}
           </nav>
 
           {/* Provider Profile Dropdown */}
@@ -135,21 +135,22 @@ export default function Navbar() {
 
             <nav className="hidden lg:flex gap-10 ml-8 text-sm font-medium">
               <Link to="/" className="text-gray-700 hover:text-indigo-600 transition">Home</Link>
-              <a href="#providers" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">Services</a>
+              <a href="/services" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">Services</a>
               <Link to="/providers" className="text-gray-700 hover:text-indigo-600 transition">Find Provider</Link>
-              <a href="#how" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">How it works</a>
+              <a href="/HowItWorks" className="text-gray-700 hover:text-indigo-600 transition cursor-pointer">How it works</a>
+                <Link to="/userdashboard" className="text-gray-700 hover:text-indigo-600 transition">user Dashboard</Link>
             </nav>
           </div>
 
           {/* Customer Actions */}
           <div className="flex items-center gap-4">
-            {/* Bookings */}
+            {/* bookings */}
             <Link
               to="/my-bookings"
               className="hidden lg:inline-flex items-center gap-2 px-5 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100 transition font-medium"
             >
               <History size={18} />
-              My Bookings
+              My bookings
             </Link>
 
             {/* Book Now Button */}
@@ -198,7 +199,7 @@ export default function Navbar() {
                       className="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-indigo-50 transition"
                     >
                       <History size={16} className="text-indigo-600" />
-                      My Bookings
+                      My bookings
                     </Link>
                     <Link
                       to="/my-profile"

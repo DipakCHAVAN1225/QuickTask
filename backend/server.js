@@ -35,11 +35,6 @@ console.log(`   CORS Origin: ${CORS_ORIGIN}`);
 console.log(`   JWT Secret: ${JWT_SECRET.substring(0, 10)}...`);
 
 
-
-
-
-
-
 // ============ MIDDLEWARE ============
 app.use(cors({
   origin: CORS_ORIGIN,
@@ -66,31 +61,9 @@ mongoose.connect(MONGODB_URI, {
     process.exit(1);
   });
 
-// ============ USER SCHEMA ============
-// const userSchema = new mongoose.Schema({
-//   name: { type: String, required: true },
-//   email: { type: String, required: true, unique: true, lowercase: true },
-//   password: { type: String, required: true },
-//   role: { type: String, enum: ['user', 'provider'], required: true },
-//   phone: { type: String, default: '' },
-//   address: { type: String, default: '' },
-  
-//   // For service providers
-//   businessName: { type: String, default: '' },
-//   serviceType: { type: String, default: '' },
-//   services: [String],
-  
-//   // Profile
-//   dp: { type: String, default: '' },
-//   bio: { type: String, default: '' },
-//   rating: { type: Number, default: 0 },
-//   totalReviews: { type: Number, default: 0 },
-  
-//   createdAt: { type: Date, default: Date.now }
-// });
 
 // ============ ENHANCED USER SCHEMA ============
-// Replace your existing userSchema with this one in server.js
+
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -137,12 +110,10 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// const User = mongoose.model('User', userSchema);
-
-
-
-
 const User = mongoose.model('User', userSchema);
+
+
+
 
 // ============ AUTH MIDDLEWARE ============
 const authMiddleware = async (req, res, next) => {

@@ -1,6 +1,7 @@
 // routes/paymentRoutes.js
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 // Middleware to verify JWT token
 const jwt = require('jsonwebtoken');
@@ -26,6 +27,59 @@ const verifyToken = (req, res, next) => {
     });
   }
 };
+
+// Auth middleware that gets full user object
+const authMiddleware = async (req, res, next) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+    }
+    
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const User = mongoose.model('User');
+    const user = await User.findById(decoded.userId);
+    
+    if (!user) {
+      return res.status(401).json({ error: 'User not found' });
+    }
+    
+    req.user = user;
+    req.token = token;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Please authenticate', details: error.message });
+  }
+};
+
+// ============ GET USER BOOKINGS ============
+router.get('/user-bookings', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user._id;
+    console.log('📖 Fetching bookings for user:', userId);
+    
+    // Get the Payment collection
+    const db = mongoose.connection;
+    const Payment = db.collection('payments');
+    
+    const bookings = await Payment.find({ userId: new mongoose.Types.ObjectId(userId) })
+      .sort({ createdAt: -1 })
+      .toArray();
+    
+    console.log('✅ Found', bookings.length, 'bookings');
+    res.json({ 
+      success: true, 
+      bookings: bookings || [] 
+    });
+  } catch (error) {
+    console.error('Error fetching bookings:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error fetching bookings',
+      error: error.message
+    });
+  }
+});
 
 // Dummy payment endpoint for testing
 router.post("/dummy-pay", async (req, res) => {
