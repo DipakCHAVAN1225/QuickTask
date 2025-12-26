@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { LogOut, Settings, Calendar, History, ChevronDown, User, Menu, X } from 'lucide-react';
 import { useAuth } from '../auth/useAuth';
+import { IconPhone } from '../App'
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -46,9 +47,6 @@ export default function Navbar() {
           {/* Provider Navigation */}
           <nav className="hidden lg:flex gap-10 text-sm font-medium">
             <Link to="/providerdashboard" className="text-gray-700 hover:text-indigo-600 transition">Dashboard</Link>
-            {/* <Link to="/providerbookings" className="text-gray-700 hover:text-indigo-600 transition">bookings</Link>
-            <Link to="/providerearnings" className="text-gray-700 hover:text-indigo-600 transition">Earnings</Link>
-            <Link to="/providerprofile" className="text-gray-700 hover:text-indigo-600 transition">Profile</Link> */}
           </nav>
 
           {/* Provider Profile Dropdown */}
@@ -81,26 +79,6 @@ export default function Navbar() {
                   </p>
                   <p className="text-xs text-gray-600 mt-1">{user.email}</p>
                   {user.serviceType && <p className="text-xs text-indigo-600 mt-2 font-medium">Service: {user.serviceType}</p>}
-                </div>
-
-                {/* Menu Items */}
-                <div className="py-3">
-                  <Link
-                    to="/providerprofile"
-                    onClick={() => setIsDropdownOpen(false)}
-                    className="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-indigo-50 transition"
-                  >
-                    <Settings size={16} className="text-indigo-600" />
-                    Settings
-                  </Link>
-                  <Link
-                    to="/provider-earnings"
-                    onClick={() => setIsDropdownOpen(false)}
-                    className="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-indigo-50 transition"
-                  >
-                    <Calendar size={16} className="text-indigo-600" />
-                    Earnings
-                  </Link>
                 </div>
 
                 {/* Logout */}

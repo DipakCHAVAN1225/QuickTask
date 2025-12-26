@@ -1,10 +1,12 @@
 
 
 import { IconPhone } from '../App'
+import { Link } from 'react-router-dom'
+import { Calendar } from 'lucide-react'
 
 export default function Hero(){
   return (
-    <section className="max-w-screen-2xl mx-auto px-6 py-8 md:py-12 min-h-screen md:min-h-[90vh] flex items-center pt-20 md:pt-24">
+    <section className="max-w-screen-2xl mx-auto px-6 py-8 md:py-12 min-h-screen md:min-h-[90vh] flex items-center md:pt-6">
       {/* Main Grid */}
       <div className="grid md:grid-cols-2 gap-12 items-center">
         
@@ -19,7 +21,7 @@ export default function Hero(){
           {/* Main Heading */}
           <div className="space-y-4">
             <h1 className="text-5xl md:text-6xl font-bold leading-tight text-gray-900">
-              Home services made <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">simple</span>
+              Home services made <span className="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">simple</span>
             </h1>
             <p className="text-lg text-gray-600 leading-relaxed max-w-lg">
               Get verified professionals for cleaning, AC repair, plumbing, electrical work and more. Transparent pricing, quick booking, and professional service guaranteed.
@@ -60,7 +62,7 @@ export default function Hero(){
         <div className="hidden md:block">
           <div className="relative group">
             {/* Floating Background Element */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-linear-to-br from-blue-100 to-indigo-100 rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
             
             {/* Main Card */}
             <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl group-hover:shadow-3xl transition-shadow duration-500">
@@ -95,8 +97,14 @@ export default function Hero(){
                     <p className="text-xs text-gray-600 mb-1">Starting at</p>
                     <p className="text-2xl font-bold text-gray-900">₹1,299</p>
                   </div>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-colors duration-300">
+                  {/* <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-colors duration-300">
                     Book Now
+                  </button> */}
+                  <button>
+                  <Link to="/Providers" className="inline-flex items-center gap-2 bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-2 rounded-full shadow-lg shadow-indigo-500/30 transition duration-300 font-semibold text-sm">
+                                <Calendar size={18} />
+                                Book Now
+                  </Link>
                   </button>
                 </div>
               </div>

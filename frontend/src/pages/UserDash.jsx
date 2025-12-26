@@ -98,7 +98,7 @@ export default function UserDash() {
   const firstName = displayName.split(' ')[0];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen pt-28 bg-gray-50">
       {/* Header */}
 
       {/* Main Content */}

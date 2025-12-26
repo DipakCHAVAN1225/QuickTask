@@ -5,7 +5,7 @@ export default function HowItWorks() {
   return (
     <section
       id="how"
-      className="py-16 bg-gradient-to-b from-white via-indigo-50/40 to-white"
+      className="py-16 pt-36 bg-gradient-to-b from-white via-indigo-50/40 to-white"
     >
       {/* Heading */}
       <div className="text-4xl text-center font-extrabold text-gray-900 mb-16">

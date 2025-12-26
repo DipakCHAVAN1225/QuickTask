@@ -1,4 +1,5 @@
 
+
 ////////////////////////////
 // backend/server.js
 // Load environment variables from .env file
@@ -9,16 +10,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// const bookingRoutes = require('./routes/BookingRoutes');
+const multer = require('multer');
+
 const app = express();
 
-
-
-
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // ============ CONFIGURATION ============
 const PORT = process.env.PORT || 3000;
@@ -34,13 +31,27 @@ console.log(`   MongoDB: ${MONGODB_URI.split('@')[1] || MONGODB_URI}`);
 console.log(`   CORS Origin: ${CORS_ORIGIN}`);
 console.log(`   JWT Secret: ${JWT_SECRET.substring(0, 10)}...`);
 
+// ============ MULTER CONFIGURATION (Memory Storage for MongoDB) ============
+const storage = multer.memoryStorage(); // Store image in memory temporarily
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only JPEG, PNG, GIF, and WebP allowed.'));
+    }
+  }
+});
 
 // ============ MIDDLEWARE ============
 app.use(cors({
   origin: CORS_ORIGIN,
   credentials: true,
 }));
-app.use(express.json());
 
 // Request logging middleware (development only)
 if (NODE_ENV === 'development') {
@@ -61,10 +72,7 @@ mongoose.connect(MONGODB_URI, {
     process.exit(1);
   });
 
-
 // ============ ENHANCED USER SCHEMA ============
-
-
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
@@ -72,21 +80,25 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['user', 'provider'], required: true },
   phone: { type: String, default: '' },
   address: { type: String, default: '' },
+  city: { type: String, default: '' },
+  state: { type: String, default: '' },
+  zipcode: { type: String, default: '' },
   
   // For service providers
   businessName: { type: String, default: '' },
   serviceType: { type: String, default: '' },
   services: [String],
   
-  // Pricing & Experience (NEW)
+  // Pricing & Experience
   pricePerHour: { type: Number, default: 500 },
   maxPrice: { type: Number, default: 1500 },
   yearsOfExperience: { type: Number, default: 5 },
   responseTime: { type: String, default: '15 mins' },
   completionRate: { type: Number, default: 98 },
   
-  // Profile
-  dp: { type: String, default: '' },
+  // Profile Picture - Stored as Base64 in MongoDB
+  dp: { type: String, default: '' }, // Base64 string
+  dpMimeType: { type: String, default: 'image/jpeg' }, // image type
   bio: { type: String, default: '' },
   rating: { type: Number, default: 4.5, min: 0, max: 5 },
   totalReviews: { type: Number, default: 0 },
@@ -101,19 +113,18 @@ const userSchema = new mongoose.Schema({
   
   // Availability
   isAvailable: { type: Boolean, default: true },
-  workingDays: [String], // e.g., ['Monday', 'Tuesday', ...]
+  workingDays: [String],
   workingHours: {
     start: { type: String, default: '09:00 AM' },
     end: { type: String, default: '06:00 PM' }
   },
   
-  createdAt: { type: Date, default: Date.now }
+  profileCompleted: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 const User = mongoose.model('User', userSchema);
-
-
-
 
 // ============ AUTH MIDDLEWARE ============
 const authMiddleware = async (req, res, next) => {
@@ -138,18 +149,15 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-
-
-
 const bookingsRouter = require('./routes/Bookings');
 const paymentRoutes = require("./routes/paymentRoutes");
 
 // ============ ROUTES ============
-
 app.use("/api/payment", paymentRoutes);
-app.use("/api/providers", require("./routes/Providers"))
-app.use('/api/bookings', bookingsRouter);;
+app.use("/api/providers", require("./routes/Providers"));
+app.use('/api/bookings', bookingsRouter);
 
+// ============ AUTH ROUTES ============
 
 // Register
 app.post('/api/auth/register', async (req, res) => {
@@ -186,6 +194,7 @@ app.post('/api/auth/register', async (req, res) => {
       role,
       phone: phone || '',
       address: address || '',
+      profileCompleted: false
     };
 
     if (role === 'provider') {
@@ -208,7 +217,7 @@ app.post('/api/auth/register', async (req, res) => {
         role: user.role,
         businessName: user.businessName,
         serviceType: user.serviceType,
-
+        profileCompleted: user.profileCompleted
       }
     });
 
@@ -240,6 +249,12 @@ app.post('/api/auth/login', async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
 
+    // Convert DP to data URL for frontend
+    let dpDataUrl = '';
+    if (user.dp) {
+      dpDataUrl = `data:${user.dpMimeType || 'image/jpeg'};base64,${user.dp}`;
+    }
+
     res.json({
       token,
       user: {
@@ -251,7 +266,11 @@ app.post('/api/auth/login', async (req, res) => {
         serviceType: user.serviceType,
         phone: user.phone,
         address: user.address,
-        dp: user.dp
+        city: user.city,
+        state: user.state,
+        zipcode: user.zipcode,
+        dp: dpDataUrl,
+        profileCompleted: user.profileCompleted
       }
     });
 
@@ -265,6 +284,12 @@ app.post('/api/auth/login', async (req, res) => {
 // Get current user
 app.get('/api/auth/me', authMiddleware, async (req, res) => {
   try {
+    // Convert DP to data URL
+    let dpDataUrl = '';
+    if (req.user.dp) {
+      dpDataUrl = `data:${req.user.dpMimeType || 'image/jpeg'};base64,${req.user.dp}`;
+    }
+
     res.json({
       user: {
         id: req.user._id,
@@ -275,10 +300,15 @@ app.get('/api/auth/me', authMiddleware, async (req, res) => {
         serviceType: req.user.serviceType,
         phone: req.user.phone,
         address: req.user.address,
-        dp: req.user.dp,
+        city: req.user.city,
+        state: req.user.state,
+        zipcode: req.user.zipcode,
+        dp: dpDataUrl,
+        bio: req.user.bio,
         services: req.user.services,
         rating: req.user.rating,
-        totalReviews: req.user.totalReviews
+        totalReviews: req.user.totalReviews,
+        profileCompleted: req.user.profileCompleted
       }
     });
   } catch (error) {
@@ -286,7 +316,136 @@ app.get('/api/auth/me', authMiddleware, async (req, res) => {
   }
 });
 
-// Update profile
+// ============ PROFILE ENDPOINTS ============
+
+// Get user profile (for profile page)
+app.get('/api/user/profile', authMiddleware, async (req, res) => {
+  try {
+    console.log('📥 GET /api/user/profile - User:', req.user.email);
+    
+    // Convert DP to data URL for frontend
+    let dpDataUrl = '';
+    if (req.user.dp) {
+      dpDataUrl = `data:${req.user.dpMimeType || 'image/jpeg'};base64,${req.user.dp}`;
+    }
+
+    res.json({
+      user: {
+        id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        phone: req.user.phone,
+        address: req.user.address,
+        city: req.user.city,
+        state: req.user.state,
+        zipcode: req.user.zipcode,
+        bio: req.user.bio,
+        dp: dpDataUrl,
+        role: req.user.role,
+        createdAt: req.user.createdAt,
+        profileCompleted: req.user.profileCompleted
+      }
+    });
+
+    console.log('✅ Profile data sent');
+  } catch (error) {
+    console.error('❌ Error fetching profile:', error);
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Update user profile with image upload (stores image in MongoDB as Base64)
+app.put('/api/user/profile', authMiddleware, upload.single('profileImage'), async (req, res) => {
+  try {
+    const { phone, address, city, state, zipcode, bio } = req.body;
+
+    console.log('📤 PUT /api/user/profile - User:', req.user.email);
+
+    // Validate required fields
+    if (!phone || !address || !city || !state || !zipcode || !bio) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Validate bio length
+    if (bio.trim().length < 10) {
+      return res.status(400).json({ error: 'Bio must be at least 10 characters' });
+    }
+
+    // Validate zipcode
+    if (!/^[0-9]{5,}$/.test(zipcode.replace(/\s/g, ''))) {
+      return res.status(400).json({ error: 'Invalid zipcode format' });
+    }
+
+    // Validate phone
+    if (!/^[0-9+\-\s()]{10,}$/.test(phone)) {
+      return res.status(400).json({ error: 'Invalid phone number' });
+    }
+
+    // Handle profile image - Convert to Base64 and store in MongoDB
+    let dpBase64 = req.user.dp; // Keep existing image if no new upload
+    let dpMimeType = req.user.dpMimeType || 'image/jpeg';
+
+    if (req.file) {
+      console.log('   📸 Processing image...');
+      
+      // Convert file buffer to Base64 string
+      dpBase64 = req.file.buffer.toString('base64');
+      dpMimeType = req.file.mimetype;
+      
+      console.log(`   Image type: ${dpMimeType}`);
+      console.log(`   Image size: ${(req.file.buffer.length / 1024).toFixed(2)} KB`);
+    }
+
+    // Update user in MongoDB
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        phone,
+        address,
+        city,
+        state,
+        zipcode,
+        bio,
+        dp: dpBase64,           // Base64 string stored in MongoDB
+        dpMimeType: dpMimeType, // Image type
+        profileCompleted: true,
+        updatedAt: Date.now()
+      },
+      { new: true }
+    ).select('-password');
+
+    // Convert DP to data URL for frontend
+    let dpDataUrl = '';
+    if (updatedUser.dp) {
+      dpDataUrl = `data:${updatedUser.dpMimeType};base64,${updatedUser.dp}`;
+    }
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        address: updatedUser.address,
+        city: updatedUser.city,
+        state: updatedUser.state,
+        zipcode: updatedUser.zipcode,
+        bio: updatedUser.bio,
+        dp: dpDataUrl, // Return as data URL
+        role: updatedUser.role,
+        profileCompleted: updatedUser.profileCompleted
+      }
+    });
+
+    console.log(`✅ Profile updated: ${updatedUser.email}`);
+  } catch (error) {
+    console.error('❌ Profile update error:', error);
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Update profile (old endpoint - kept for backward compatibility)
 app.put('/api/auth/profile', authMiddleware, async (req, res) => {
   try {
     const { name, phone, address, businessName, serviceType, bio, dp } = req.body;
@@ -300,7 +459,8 @@ app.put('/api/auth/profile', authMiddleware, async (req, res) => {
         businessName: businessName !== undefined ? businessName : req.user.businessName,
         serviceType: serviceType !== undefined ? serviceType : req.user.serviceType,
         bio: bio !== undefined ? bio : req.user.bio,
-        dp: dp !== undefined ? dp : req.user.dp
+        dp: dp !== undefined ? dp : req.user.dp,
+        updatedAt: Date.now()
       },
       { new: true }
     ).select('-password');
@@ -344,7 +504,14 @@ app.post('/api/auth/change-password', authMiddleware, async (req, res) => {
 app.get('/api/service-providers', async (req, res) => {
   try {
     const providers = await User.find({ role: 'provider' }).select('-password').lean();
-    res.json(providers);
+    
+    // Convert DPs to data URLs
+    const providersWithDp = providers.map(provider => ({
+      ...provider,
+      dp: provider.dp ? `data:${provider.dpMimeType || 'image/jpeg'};base64,${provider.dp}` : ''
+    }));
+    
+    res.json(providersWithDp);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -357,6 +524,11 @@ app.get('/api/service-providers/:id', async (req, res) => {
     
     if (!provider || provider.role !== 'provider') {
       return res.status(404).json({ error: 'Provider not found' });
+    }
+    
+    // Convert DP to data URL
+    if (provider.dp) {
+      provider.dp = `data:${provider.dpMimeType || 'image/jpeg'};base64,${provider.dp}`;
     }
     
     res.json(provider);
@@ -375,11 +547,20 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
+// ============ ERROR HANDLER ============
+app.use((error, req, res, next) => {
+  console.error('❌ Error:', error);
+  if (error instanceof multer.MulterError) {
+    return res.status(400).json({ error: 'File upload error: ' + error.message });
+  }
+  res.status(500).json({ error: error.message || 'Internal server error' });
+});
+
 // ============ START SERVER ============
 app.listen(PORT, () => {
   console.log('\n🚀 QuickTask Server Started');
   console.log(`   🔗 http://localhost:${PORT}`);
   console.log(`   📡 API: http://localhost:${PORT}/api`);
   console.log(`   🏥 Health: http://localhost:${PORT}/api/health`);
-  console.log(`\n`);
+  console.log(`   💾 Profile pictures stored in MongoDB\n`);
 });

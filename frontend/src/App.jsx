@@ -74,7 +74,7 @@ function HomePage({ selectedProvider, onSelectProvider, onBackFromBooking }) {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
-      <main>
+      <main className="pt-20">
         <Hero />
         <ImageSlider />
         <Categories />

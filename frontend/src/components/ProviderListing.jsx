@@ -58,7 +58,7 @@ export default function ProviderListing({ onSelectProvider, onBack }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen pt-20 bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           <p className="mt-4 text-gray-600">Loading providers...</p>
@@ -68,7 +68,7 @@ export default function ProviderListing({ onSelectProvider, onBack }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen pt-20 bg-gray-50">
       <div className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center gap-4">
           {onBack && (
@@ -147,11 +147,20 @@ export default function ProviderListing({ onSelectProvider, onBack }) {
                 }`}
                 onClick={() => !isProvider && onSelectProvider(provider)}
               >
-                <div className="h-40 bg-gradient-to-r from-blue-400 to-blue-600 relative overflow-hidden">
+                
+
+                <div className="p-6 bg-gradient-to-r from-blue-400 to-blue-600 flex justify-center items-center">
                   <img
-                    src={provider.dp || `https://api.dicebear.com/7.x/avataaars/svg?seed=${provider.name}`}
+                    src={
+                      provider.dp
+                        ? `{provider.dp}`
+                        : `https://api.dicebear.com/7.x/avataaars/svg?seed=${provider.name}`
+                    }
                     alt={provider.name}
-                    className="w-full h-full object-cover opacity-70"
+                    className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+                    onError={(e) => {
+                      e.target.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${provider.name}`;
+                    }}
                   />
                 </div>
 

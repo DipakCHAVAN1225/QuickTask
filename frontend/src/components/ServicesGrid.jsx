@@ -42,7 +42,7 @@ const services = [
 
 export default function HomeServices() {
   return (
-    <div className="w-full">
+    <div className="w-full pt-20" >
 
       {/* ------------------ CATEGORIES SECTION ------------------ */}
       <section className="max-w-7xl mx-auto px-6 py-10">
